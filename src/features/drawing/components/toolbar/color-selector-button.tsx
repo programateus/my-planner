@@ -11,8 +11,8 @@ import {
 import { Pressable } from "@/components/gluestack/pressable";
 import { Text } from "@/components/gluestack/text";
 
-import { useDrawingSettings } from "../../contexts/drawing-settings-context";
-import { HIGHLIGHTER_COLORS } from "../../domain/highlighter";
+import { useDrawingSettings } from "@/features/drawing/contexts/drawing-settings-context";
+import { HIGHLIGHTER_COLORS } from "@/features/drawing/domain/highlighter";
 
 const STROKE_COLORS = [
   { label: "Preto", value: "#0A0A0A" },

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 
-import { useDrawingSession } from "../contexts/drawing-session-context";
-import { AddStrokeCommand } from "../domain/commands/add-stroke-command";
-import type { Stroke } from "../domain/entities/stroke";
+import { useDrawingSession } from "@/features/drawing/contexts/drawing-session-context";
+import { AddStrokeCommand } from "@/features/drawing/domain/commands/add-stroke-command";
+import type { Stroke } from "@/features/drawing/domain/entities/stroke";
 
 export function useDrawingActions() {
   const { document, history } = useDrawingSession();

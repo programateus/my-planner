@@ -1,5 +1,5 @@
-import type { Stroke } from "./entities/stroke";
-import type { PageTemplates } from "./planner-template";
+import type { Stroke } from "@/features/drawing/domain/entities/stroke";
+import type { PageTemplates } from "@/features/drawing/domain/planner-template";
 
 export interface DocumentData {
   version: 1;

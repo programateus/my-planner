@@ -1,9 +1,9 @@
 import { makeMutable, SharedValue } from "react-native-reanimated";
-import { CanvasDocument } from "../domain/canvas-document";
-import { Stroke } from "../domain/entities/stroke";
-import type { PageTemplates, PlannerTemplateId } from "../domain/planner-template";
-import { createEmptyDocument, type DocumentData } from "../domain/document-data";
-import { renderStroke, type RenderedStroke } from "./render-stroke";
+import { CanvasDocument } from "@/features/drawing/domain/canvas-document";
+import { Stroke } from "@/features/drawing/domain/entities/stroke";
+import type { PageTemplates, PlannerTemplateId } from "@/features/drawing/domain/planner-template";
+import { createEmptyDocument, type DocumentData } from "@/features/drawing/domain/document-data";
+import { renderStroke, type RenderedStroke } from "@/features/drawing/services/render-stroke";
 
 export class SkiaCanvasDocument implements CanvasDocument {
   private readonly renderedStrokes: SharedValue<RenderedStroke[]>;

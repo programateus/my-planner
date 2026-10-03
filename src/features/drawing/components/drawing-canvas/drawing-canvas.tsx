@@ -11,18 +11,18 @@ import { StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue } from "react-native-reanimated";
 
-import { useDrawingSession } from "../../contexts/drawing-session-context";
-import { useDrawingSettings } from "../../contexts/drawing-settings-context";
-import { usePlannerTemplate } from "../../contexts/planner-template-context";
-import { getPageBounds } from "../../geometry/notebook-geometry";
-import { useDrawingActions } from "../../hooks/use-drawing-actions";
-import { ActiveStrokeLayer } from "./active-stroke-layer";
-import { CommittedStrokesLayer } from "./committed-strokes-layer";
-import { PageTemplateLayer } from "./page-template-layer";
-import { ViewportControls } from "./viewport-controls";
-import { usePenGesture } from "./hooks/gestures/use-pen-gesture";
-import { useViewportGesture } from "./hooks/gestures/use-viewport-gesture";
-import { useStrokeSession } from "./hooks/use-stroke-session";
+import { useDrawingSession } from "@/features/drawing/contexts/drawing-session-context";
+import { useDrawingSettings } from "@/features/drawing/contexts/drawing-settings-context";
+import { usePlannerTemplate } from "@/features/drawing/contexts/planner-template-context";
+import { getPageBounds } from "@/features/drawing/geometry/notebook-geometry";
+import { useDrawingActions } from "@/features/drawing/hooks/use-drawing-actions";
+import { ActiveStrokeLayer } from "@/features/drawing/components/drawing-canvas/active-stroke-layer";
+import { CommittedStrokesLayer } from "@/features/drawing/components/drawing-canvas/committed-strokes-layer";
+import { PageTemplateLayer } from "@/features/drawing/components/drawing-canvas/page-template-layer";
+import { ViewportControls } from "@/features/drawing/components/drawing-canvas/viewport-controls";
+import { usePenGesture } from "@/features/drawing/components/drawing-canvas/hooks/gestures/use-pen-gesture";
+import { useViewportGesture } from "@/features/drawing/components/drawing-canvas/hooks/gestures/use-viewport-gesture";
+import { useStrokeSession } from "@/features/drawing/components/drawing-canvas/hooks/use-stroke-session";
 
 export function DrawingCanvas() {
   const { document } = useDrawingSession();

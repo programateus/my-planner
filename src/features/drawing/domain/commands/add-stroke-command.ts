@@ -1,6 +1,6 @@
-import { CanvasDocument } from "../canvas-document";
-import { Stroke } from "../entities/stroke";
-import { Command } from "./command";
+import { CanvasDocument } from "@/features/drawing/domain/canvas-document";
+import { Stroke } from "@/features/drawing/domain/entities/stroke";
+import { Command } from "@/features/drawing/domain/commands/command";
 
 export class AddStrokeCommand implements Command {
   constructor(

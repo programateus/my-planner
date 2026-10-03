@@ -1,4 +1,4 @@
-import { Command } from "../domain/commands/command";
+import { Command } from "@/features/drawing/domain/commands/command";
 
 export type CommandManagerListener = () => void;
 

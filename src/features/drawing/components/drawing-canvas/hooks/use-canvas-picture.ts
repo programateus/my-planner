@@ -1,8 +1,8 @@
 import { ClipOp, Skia } from "@shopify/react-native-skia";
 import { useDerivedValue, type SharedValue } from "react-native-reanimated";
 
-import type { RenderedStroke } from "../../../services/render-stroke";
-import { getPageBounds } from "../../../geometry/notebook-geometry";
+import type { RenderedStroke } from "@/features/drawing/services/render-stroke";
+import { getPageBounds } from "@/features/drawing/geometry/notebook-geometry";
 
 export function useCanvasPicture(
   strokes: SharedValue<RenderedStroke[]>,

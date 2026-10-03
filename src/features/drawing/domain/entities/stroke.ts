@@ -1,4 +1,4 @@
-import type { Style } from "./style";
+import type { Style } from "@/features/drawing/domain/entities/style";
 
 export type StrokeSample = { x: number; y: number; width: number };
 

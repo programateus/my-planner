@@ -1,7 +1,7 @@
 import { Group, Picture, Skia, type SkPicture } from "@shopify/react-native-skia";
 import { memo } from "react";
 
-import { getPageBounds } from "../../geometry/notebook-geometry";
+import { getPageBounds } from "@/features/drawing/geometry/notebook-geometry";
 
 export const PageTemplateLayer = memo(function PageTemplateLayer({
   pageIndex,

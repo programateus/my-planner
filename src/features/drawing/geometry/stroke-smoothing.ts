@@ -1,9 +1,9 @@
 import type { SkPathBuilder } from "@shopify/react-native-skia";
-import type { StrokeSample } from "../domain/entities/stroke";
+import type { StrokeSample } from "@/features/drawing/domain/entities/stroke";
 
 export type StrokePoint = { x: number; y: number; pressure?: number };
 
-export type { StrokeSample } from "../domain/entities/stroke";
+export type { StrokeSample } from "@/features/drawing/domain/entities/stroke";
 
 export type StrokeGeometry = {
   lastPoint: StrokeSample;

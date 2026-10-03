@@ -1,7 +1,7 @@
 import { openDatabaseAsync, type SQLiteDatabase } from "expo-sqlite";
 
-import { createEmptyDocument, parseDocument, type DocumentData } from "../../drawing/domain/document-data";
-import { newEntry, normalizeName, sortEntries, type LibraryEntry, type LibraryRepository } from "../domain/library-repository";
+import { createEmptyDocument, parseDocument, type DocumentData } from "@/features/drawing/domain/document-data";
+import { newEntry, normalizeName, sortEntries, type LibraryEntry, type LibraryRepository } from "@/features/library/domain/library-repository";
 
 let database: Promise<SQLiteDatabase> | null = null;
 

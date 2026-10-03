@@ -6,8 +6,8 @@ import {
 } from "react";
 import { useSharedValue, type SharedValue } from "react-native-reanimated";
 
-import { CommandManager } from "../services/command-manager";
-import { SkiaCanvasDocument } from "../services/skia-canvas-document";
+import { CommandManager } from "@/features/drawing/services/command-manager";
+import { SkiaCanvasDocument } from "@/features/drawing/services/skia-canvas-document";
 
 type DrawingSessionContextValue = {
   document: SkiaCanvasDocument;

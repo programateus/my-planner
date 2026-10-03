@@ -1,4 +1,4 @@
-import type { DocumentData } from "../../drawing/domain/document-data";
+import type { DocumentData } from "@/features/drawing/domain/document-data";
 
 export type SaveStatus = "saved" | "saving" | "error";
 

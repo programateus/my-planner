@@ -1,7 +1,7 @@
 import { PaintStyle, Skia, type SkTypeface } from "@shopify/react-native-skia";
 
-import type { PlannerTemplateId } from "../domain/planner-template";
-import { PAGE_HEIGHT, PAGE_WIDTH } from "../geometry/notebook-geometry";
+import type { PlannerTemplateId } from "@/features/drawing/domain/planner-template";
+import { PAGE_HEIGHT, PAGE_WIDTH } from "@/features/drawing/geometry/notebook-geometry";
 
 const WEEKDAYS = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
 

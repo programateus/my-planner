@@ -1,7 +1,7 @@
 import { BlendMode, PaintStyle, Skia } from "@shopify/react-native-skia";
 
-import type { Style } from "../domain/entities/style";
-import { HIGHLIGHTER_OPACITY } from "../domain/highlighter";
+import type { Style } from "@/features/drawing/domain/entities/style";
+import { HIGHLIGHTER_OPACITY } from "@/features/drawing/domain/highlighter";
 
 export function createStrokePaint(style: Style) {
   "worklet";

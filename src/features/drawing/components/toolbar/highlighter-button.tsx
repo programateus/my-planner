@@ -2,7 +2,7 @@ import { Highlighter } from "lucide-react-native";
 
 import { Button, ButtonIcon } from "@/components/gluestack/button";
 
-import { useDrawingSettings } from "../../contexts/drawing-settings-context";
+import { useDrawingSettings } from "@/features/drawing/contexts/drawing-settings-context";
 
 export function HighlighterButton() {
   const { tool, setTool } = useDrawingSettings();

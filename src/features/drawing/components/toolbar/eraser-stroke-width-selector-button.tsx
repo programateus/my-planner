@@ -1,6 +1,6 @@
-import { useDrawingSettings } from "../../contexts/drawing-settings-context";
-import { ERASER_WIDTHS } from "../../domain/stroke-widths";
-import { StrokeWidthSelectorButton } from "./stroke-width-selector-button";
+import { useDrawingSettings } from "@/features/drawing/contexts/drawing-settings-context";
+import { ERASER_WIDTHS } from "@/features/drawing/domain/stroke-widths";
+import { StrokeWidthSelectorButton } from "@/features/drawing/components/toolbar/stroke-width-selector-button";
 
 export function EraserStrokeWidthSelectorButton() {
   const { eraserWidth, setEraserWidth } = useDrawingSettings();

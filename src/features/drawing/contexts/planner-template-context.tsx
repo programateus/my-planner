@@ -1,8 +1,8 @@
 import { createContext, type ReactNode, useContext, useMemo } from "react";
 import { useUniwind } from "uniwind";
 
-import { usePageTemplates } from "../hooks/use-page-templates";
-import { usePlannerPictures } from "../hooks/use-planner-pictures";
+import { usePageTemplates } from "@/features/drawing/hooks/use-page-templates";
+import { usePlannerPictures } from "@/features/drawing/hooks/use-planner-pictures";
 
 type PlannerTemplateContextValue = ReturnType<typeof usePageTemplates> &
   ReturnType<typeof usePlannerPictures> & { dark: boolean };

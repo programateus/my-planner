@@ -1,4 +1,4 @@
-import type { DrawingTool } from "../drawing-tool";
+import type { DrawingTool } from "@/features/drawing/domain/drawing-tool";
 
 export interface Style {
   width: number;

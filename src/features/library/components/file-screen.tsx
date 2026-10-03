@@ -14,9 +14,9 @@ import { Toolbar } from "@/features/drawing/components/toolbar";
 import { DrawingProvider } from "@/features/drawing/contexts/drawing-provider";
 import type { DocumentData } from "@/features/drawing/domain/document-data";
 import { SkiaCanvasDocument } from "@/features/drawing/services/skia-canvas-document";
-import type { LibraryEntry } from "../domain/library-repository";
-import { DocumentSaver } from "../services/document-saver";
-import { libraryRepository } from "../services/library-repository";
+import type { LibraryEntry } from "@/features/library/domain/library-repository";
+import { DocumentSaver } from "@/features/library/services/document-saver";
+import { libraryRepository } from "@/features/library/services/library-repository";
 
 function goBack() {
   if (router.canGoBack()) router.back();

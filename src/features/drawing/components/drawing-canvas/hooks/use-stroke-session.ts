@@ -3,19 +3,19 @@ import { useCallback, useMemo } from "react";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-import type { Stroke, StrokeSample } from "../../../domain/entities/stroke";
-import type { Style } from "../../../domain/entities/style";
-import { HIGHLIGHTER_OPACITY } from "../../../domain/highlighter";
+import type { Stroke, StrokeSample } from "@/features/drawing/domain/entities/stroke";
+import type { Style } from "@/features/drawing/domain/entities/style";
+import { HIGHLIGHTER_OPACITY } from "@/features/drawing/domain/highlighter";
 import {
   appendSmoothedPoint,
   appendStrokeSegment,
   createStrokeSample,
   type StrokeGeometry,
   type StrokePoint,
-} from "../../../geometry/stroke-smoothing";
-import { createStrokePaint } from "../../../services/create-stroke-paint";
-import type { RenderedStroke } from "../../../services/render-stroke";
-import { createStrokeId } from "../../../utils/createStrokeId";
+} from "@/features/drawing/geometry/stroke-smoothing";
+import { createStrokePaint } from "@/features/drawing/services/create-stroke-paint";
+import type { RenderedStroke } from "@/features/drawing/services/render-stroke";
+import { createStrokeId } from "@/features/drawing/utils/createStrokeId";
 
 type StrokeDraft = {
   pageIndex: number;

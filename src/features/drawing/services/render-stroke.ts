@@ -1,8 +1,8 @@
 import { Skia, type SkPaint, type SkPath } from "@shopify/react-native-skia";
 
-import type { Stroke } from "../domain/entities/stroke";
-import { appendSmoothedPoint, appendStrokeSegment } from "../geometry/stroke-smoothing";
-import { createStrokePaint } from "./create-stroke-paint";
+import type { Stroke } from "@/features/drawing/domain/entities/stroke";
+import { appendSmoothedPoint, appendStrokeSegment } from "@/features/drawing/geometry/stroke-smoothing";
+import { createStrokePaint } from "@/features/drawing/services/create-stroke-paint";
 
 export type RenderedStroke = Stroke & { path: SkPath; paint: SkPaint };
 

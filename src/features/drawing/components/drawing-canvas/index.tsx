@@ -1,1 +1,1 @@
-export { DrawingCanvas } from "./drawing-canvas";
+export { DrawingCanvas } from "@/features/drawing/components/drawing-canvas/drawing-canvas";

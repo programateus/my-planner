@@ -1,8 +1,8 @@
 import { useCallback, useSyncExternalStore } from "react";
 
-import { useDrawingSession } from "../contexts/drawing-session-context";
-import { SetPageTemplateCommand } from "../domain/commands/set-page-template-command";
-import type { PlannerTemplateId } from "../domain/planner-template";
+import { useDrawingSession } from "@/features/drawing/contexts/drawing-session-context";
+import { SetPageTemplateCommand } from "@/features/drawing/domain/commands/set-page-template-command";
+import type { PlannerTemplateId } from "@/features/drawing/domain/planner-template";
 
 export function usePageTemplates() {
   const { document, history } = useDrawingSession();

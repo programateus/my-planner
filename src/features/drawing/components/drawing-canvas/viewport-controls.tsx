@@ -7,8 +7,8 @@ import { Box } from "@/components/gluestack/box";
 import { Button, ButtonIcon } from "@/components/gluestack/button";
 import { Text } from "@/components/gluestack/text";
 
-import { getFitScale } from "../../geometry/notebook-geometry";
-import type { CanvasViewport } from "./hooks/gestures/use-viewport-gesture";
+import { getFitScale } from "@/features/drawing/geometry/notebook-geometry";
+import type { CanvasViewport } from "@/features/drawing/components/drawing-canvas/hooks/gestures/use-viewport-gesture";
 
 const ZOOM_CONTROLS_DURATION = 3000;
 const ENTER_ANIMATION = FadeIn.duration(150);

@@ -1,6 +1,6 @@
-import type { CanvasDocument } from "../canvas-document";
-import type { PlannerTemplateId } from "../planner-template";
-import type { Command } from "./command";
+import type { CanvasDocument } from "@/features/drawing/domain/canvas-document";
+import type { PlannerTemplateId } from "@/features/drawing/domain/planner-template";
+import type { Command } from "@/features/drawing/domain/commands/command";
 
 export class SetPageTemplateCommand implements Command {
   private readonly previousTemplate: PlannerTemplateId | null;

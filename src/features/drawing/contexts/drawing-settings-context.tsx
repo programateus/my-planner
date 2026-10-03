@@ -7,13 +7,13 @@ import {
 } from "react";
 import { useUniwind } from "uniwind";
 
-import type { DrawingTool } from "../domain/drawing-tool";
-import { DEFAULT_HIGHLIGHTER_COLOR } from "../domain/highlighter";
+import type { DrawingTool } from "@/features/drawing/domain/drawing-tool";
+import { DEFAULT_HIGHLIGHTER_COLOR } from "@/features/drawing/domain/highlighter";
 import {
   DEFAULT_ERASER_WIDTH,
   DEFAULT_HIGHLIGHTER_WIDTH,
   DEFAULT_STROKE_WIDTH,
-} from "../domain/stroke-widths";
+} from "@/features/drawing/domain/stroke-widths";
 
 type DrawingSettingsContextValue = {
   tool: DrawingTool;

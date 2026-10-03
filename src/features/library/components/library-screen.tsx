@@ -15,8 +15,8 @@ import { Button, ButtonIcon, ButtonText } from "@/components/gluestack/button";
 import { Pressable } from "@/components/gluestack/pressable";
 import { SafeAreaView } from "@/components/gluestack/safe-area-view";
 import { Text } from "@/components/gluestack/text";
-import type { LibraryEntry } from "../domain/library-repository";
-import { libraryRepository } from "../services/library-repository";
+import type { LibraryEntry } from "@/features/library/domain/library-repository";
+import { libraryRepository } from "@/features/library/services/library-repository";
 
 type NamePrompt = { kind: LibraryEntry["kind"]; entry?: LibraryEntry };
 

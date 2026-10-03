@@ -5,9 +5,9 @@ import {
   clampPointToPage,
   getPageAtPoint,
   toDocumentPoint,
-} from "../../../../geometry/notebook-geometry";
-import type { StrokeSession } from "../use-stroke-session";
-import type { CanvasViewport } from "./use-viewport-gesture";
+} from "@/features/drawing/geometry/notebook-geometry";
+import type { StrokeSession } from "@/features/drawing/components/drawing-canvas/hooks/use-stroke-session";
+import type { CanvasViewport } from "@/features/drawing/components/drawing-canvas/hooks/gestures/use-viewport-gesture";
 
 export function usePenGesture(
   { beginStroke, updateStroke, finishStroke, cancelStroke, currentPage }: StrokeSession,

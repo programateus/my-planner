@@ -1,6 +1,6 @@
 import { useCallback, useSyncExternalStore } from "react";
 
-import { useDrawingSession } from "../contexts/drawing-session-context";
+import { useDrawingSession } from "@/features/drawing/contexts/drawing-session-context";
 
 export function useDrawingHistory() {
   const { history } = useDrawingSession();

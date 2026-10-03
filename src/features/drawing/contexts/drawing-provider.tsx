@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
-import { DrawingSessionProvider } from "./drawing-session-context";
-import { DrawingSettingsProvider } from "./drawing-settings-context";
-import { PlannerTemplateProvider } from "./planner-template-context";
-import type { SkiaCanvasDocument } from "../services/skia-canvas-document";
+import { DrawingSessionProvider } from "@/features/drawing/contexts/drawing-session-context";
+import { DrawingSettingsProvider } from "@/features/drawing/contexts/drawing-settings-context";
+import { PlannerTemplateProvider } from "@/features/drawing/contexts/planner-template-context";
+import type { SkiaCanvasDocument } from "@/features/drawing/services/skia-canvas-document";
 
 export function DrawingProvider({ children, document }: { children: ReactNode; document: SkiaCanvasDocument }) {
   return (

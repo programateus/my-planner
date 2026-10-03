@@ -1,8 +1,8 @@
 import { useTypeface, type SkPicture } from "@shopify/react-native-skia";
 import { useMemo, useState } from "react";
 
-import type { PlannerTemplateId } from "../domain/planner-template";
-import { createPlannerPicture } from "../services/create-planner-picture";
+import type { PlannerTemplateId } from "@/features/drawing/domain/planner-template";
+import { createPlannerPicture } from "@/features/drawing/services/create-planner-picture";
 
 export type PlannerPictures = Record<PlannerTemplateId, SkPicture>;
 

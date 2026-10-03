@@ -11,7 +11,7 @@ import {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-import { useDrawingSession } from "../../../../contexts/drawing-session-context";
+import { useDrawingSession } from "@/features/drawing/contexts/drawing-session-context";
 
 import {
   clamp,
@@ -27,7 +27,7 @@ import {
   toDocumentPoint,
   VIEWPORT_PADDING,
   type ViewportSize,
-} from "../../../../geometry/notebook-geometry";
+} from "@/features/drawing/geometry/notebook-geometry";
 
 export function useViewportGesture(activeStrokePage: SharedValue<number>) {
   const { currentPage, document } = useDrawingSession();

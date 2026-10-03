@@ -1,8 +1,8 @@
 import { Picture } from "@shopify/react-native-skia";
 import type { SharedValue } from "react-native-reanimated";
 
-import type { RenderedStroke } from "../../services/render-stroke";
-import { useCanvasPicture } from "./hooks/use-canvas-picture";
+import type { RenderedStroke } from "@/features/drawing/services/render-stroke";
+import { useCanvasPicture } from "@/features/drawing/components/drawing-canvas/hooks/use-canvas-picture";
 
 type CommittedStrokesLayerProps = {
   strokes: SharedValue<RenderedStroke[]>;
