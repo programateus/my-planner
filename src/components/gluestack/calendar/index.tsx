@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
 import {
   createCalendar,
-  type ICalendarProps
-} from '@gluestack-ui/core/calendar/creator';
-import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { Menu, MenuItem, MenuItemLabel } from '../menu';
+  type ICalendarProps,
+} from "@gluestack-ui/core/calendar/creator";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
+import { Menu, MenuItem, MenuItemLabel } from "../menu";
 import {
   calendarBodyStyle,
   calendarDayIndicatorStyle,
@@ -25,7 +25,7 @@ import {
   calendarWeekNumberStyle,
   calendarWeekNumberTextStyle,
   calendarWeekStyle,
-} from './styles';
+} from "./styles";
 
 // Styled Root Component
 const CalendarRoot = React.forwardRef<
@@ -103,8 +103,18 @@ const CalendarHeaderTitleRoot = React.forwardRef<
 });
 
 const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 type SelectRootProps = React.ComponentProps<typeof View> & {
@@ -118,14 +128,22 @@ const CalendarHeaderMonthSelectRoot = React.forwardRef<
   React.ElementRef<typeof View>,
   SelectRootProps
 >(({ className, items = [], selectedValue, onValueChange, ...props }, ref) => {
-  const label = selectedValue !== undefined ? MONTH_NAMES[selectedValue] : 'Month';
+  const label =
+    selectedValue !== undefined ? MONTH_NAMES[selectedValue] : "Month";
   return (
-    <View ref={ref} className={calendarHeaderSelectStyle({ class: className })} {...props}>
+    <View
+      ref={ref}
+      className={calendarHeaderSelectStyle({ class: className })}
+      {...props}
+    >
       <Menu
         placement="bottom"
         offset={4}
         trigger={({ ...triggerProps }) => (
-          <Pressable {...triggerProps} className="px-2 py-1 rounded-md flex-row items-center">
+          <Pressable
+            {...triggerProps}
+            className="px-2 py-1 rounded-md flex-row items-center"
+          >
             <Text className="text-sm font-medium text-foreground">{label}</Text>
           </Pressable>
         )}
@@ -137,7 +155,9 @@ const CalendarHeaderMonthSelectRoot = React.forwardRef<
             onPress={() => onValueChange?.(item.value)}
           >
             <MenuItemLabel
-              className={item.value === selectedValue ? 'text-primary font-semibold' : ''}
+              className={
+                item.value === selectedValue ? "text-primary font-semibold" : ""
+              }
             >
               {item.label}
             </MenuItemLabel>
@@ -152,14 +172,21 @@ const CalendarHeaderYearSelectRoot = React.forwardRef<
   React.ElementRef<typeof View>,
   SelectRootProps
 >(({ className, items = [], selectedValue, onValueChange, ...props }, ref) => {
-  const label = selectedValue !== undefined ? String(selectedValue) : 'Year';
+  const label = selectedValue !== undefined ? String(selectedValue) : "Year";
   return (
-    <View ref={ref} className={calendarHeaderSelectStyle({ class: className })} {...props}>
+    <View
+      ref={ref}
+      className={calendarHeaderSelectStyle({ class: className })}
+      {...props}
+    >
       <Menu
         placement="bottom"
         offset={4}
         trigger={({ ...triggerProps }) => (
-          <Pressable {...triggerProps} className="px-2 py-1 rounded-md flex-row items-center">
+          <Pressable
+            {...triggerProps}
+            className="px-2 py-1 rounded-md flex-row items-center"
+          >
             <Text className="text-sm font-medium text-foreground">{label}</Text>
           </Pressable>
         )}
@@ -171,7 +198,9 @@ const CalendarHeaderYearSelectRoot = React.forwardRef<
             onPress={() => onValueChange?.(item.value)}
           >
             <MenuItemLabel
-              className={item.value === selectedValue ? 'text-primary font-semibold' : ''}
+              className={
+                item.value === selectedValue ? "text-primary font-semibold" : ""
+              }
             >
               {item.label}
             </MenuItemLabel>
@@ -206,8 +235,8 @@ const CalendarWeekDayRoot = React.forwardRef<
       className={calendarWeekDayStyle({ class: className })}
       {...props}
     >
-      {typeof children === 'string' ? (
-        <Text className={calendarWeekDayTextStyle({ class: '' })}>
+      {typeof children === "string" ? (
+        <Text className={calendarWeekDayTextStyle({ class: "" })}>
           {children}
         </Text>
       ) : (
@@ -261,10 +290,10 @@ const CalendarWeekRoot = React.forwardRef<
 const CalendarDayRoot = React.forwardRef<
   React.ElementRef<typeof Pressable>,
   React.ComponentProps<typeof Pressable> & {
-    'className'?: string;
-    'data-state'?: string;
+    className?: string;
+    "data-state"?: string;
   }
->(({ className, 'data-state': dataState, ...props }, ref) => {
+>(({ className, "data-state": dataState, ...props }, ref) => {
   return (
     <Pressable
       ref={ref}
@@ -287,20 +316,20 @@ const CalendarDayTextRoot = React.forwardRef<
       className={calendarDayTextStyle({
         state:
           state?.isSelected && state?.isRangeStart
-            ? 'range-start'
+            ? "range-start"
             : state?.isSelected && state?.isRangeEnd
-              ? 'range-end'
+              ? "range-end"
               : state?.isInRange
-                ? 'range-middle'
+                ? "range-middle"
                 : state?.isSelected
-                  ? 'selected'
+                  ? "selected"
                   : state?.isToday
-                    ? 'today'
+                    ? "today"
                     : state?.isDisabled
-                      ? 'disabled'
+                      ? "disabled"
                       : state?.isOutsideMonth
-                        ? 'outside-month'
-                        : 'default',
+                        ? "outside-month"
+                        : "default",
         class: className,
       })}
       {...props}
@@ -311,10 +340,10 @@ const CalendarDayTextRoot = React.forwardRef<
 const CalendarDayIndicatorRoot = React.forwardRef<
   React.ElementRef<typeof View>,
   React.ComponentProps<typeof View> & {
-    'className'?: string;
-    'data-type'?: string;
+    className?: string;
+    "data-type"?: string;
   }
->(({ className, 'data-type': dataType, ...props }, ref) => {
+>(({ className, "data-type": dataType, ...props }, ref) => {
   return (
     <View
       ref={ref}
@@ -338,8 +367,8 @@ const CalendarWeekNumberRoot = React.forwardRef<
       className={calendarWeekNumberStyle({ class: className })}
       {...props}
     >
-      {typeof children === 'string' || typeof children === 'number' ? (
-        <Text className={calendarWeekNumberTextStyle({ class: '' })}>
+      {typeof children === "string" || typeof children === "number" ? (
+        <Text className={calendarWeekNumberTextStyle({ class: "" })}>
           {children}
         </Text>
       ) : (
@@ -386,24 +415,24 @@ const UICalendar = createCalendar({
 
 // Mode-specific discriminated union props so onValueChange is correctly
 // narrowed per mode (prevents TypeScript errors when passing setState).
-type OmittedCalendarKeys = 'mode' | 'value' | 'defaultValue' | 'onValueChange';
+type OmittedCalendarKeys = "mode" | "value" | "defaultValue" | "onValueChange";
 
 type SingleModeProps = {
-  mode?: 'single';
+  mode?: "single";
   value?: Date;
   defaultValue?: Date;
   onValueChange?: (value: Date) => void;
 };
 
 type MultipleModeProps = {
-  mode: 'multiple';
+  mode: "multiple";
   value?: Date[];
   defaultValue?: Date[];
   onValueChange?: (value: Date[]) => void;
 };
 
 type RangeModeProps = {
-  mode: 'range';
+  mode: "range";
   value?: { from: Date; to?: Date };
   defaultValue?: { from: Date; to?: Date };
   onValueChange?: (value: { from: Date; to?: Date }) => void;
@@ -421,7 +450,7 @@ const CalendarComponent = React.forwardRef<
 >((props, ref) => {
   return <UICalendar ref={ref} {...(props as any)} />;
 });
-CalendarComponent.displayName = 'Calendar';
+CalendarComponent.displayName = "Calendar";
 
 // Export components
 export const Calendar = CalendarComponent;
@@ -445,25 +474,28 @@ export const CalendarFooter = UICalendar.Footer;
 // Re-export types
 export type {
   CalendarMarker,
-  CalendarMarkers, CalendarMode, DayState, ICalendarProps
-} from '@gluestack-ui/core/calendar/creator';
+  CalendarMarkers,
+  CalendarMode,
+  DayState,
+  ICalendarProps,
+} from "@gluestack-ui/core/calendar/creator";
 
 export type { CalendarProps };
 
-CalendarRoot.displayName = 'CalendarRoot';
-CalendarHeaderRoot.displayName = 'CalendarHeaderRoot';
-CalendarHeaderPrevButtonRoot.displayName = 'CalendarHeaderPrevButtonRoot';
-CalendarHeaderNextButtonRoot.displayName = 'CalendarHeaderNextButtonRoot';
-CalendarHeaderTitleRoot.displayName = 'CalendarHeaderTitleRoot';
-CalendarHeaderMonthSelectRoot.displayName = 'CalendarHeaderMonthSelectRoot';
-CalendarHeaderYearSelectRoot.displayName = 'CalendarHeaderYearSelectRoot';
-CalendarWeekDaysHeaderRoot.displayName = 'CalendarWeekDaysHeaderRoot';
-CalendarWeekDayRoot.displayName = 'CalendarWeekDayRoot';
-CalendarBodyRoot.displayName = 'CalendarBodyRoot';
-CalendarGridRoot.displayName = 'CalendarGridRoot';
-CalendarWeekRoot.displayName = 'CalendarWeekRoot';
-CalendarDayRoot.displayName = 'CalendarDayRoot';
-CalendarDayTextRoot.displayName = 'CalendarDayTextRoot';
-CalendarDayIndicatorRoot.displayName = 'CalendarDayIndicatorRoot';
-CalendarWeekNumberRoot.displayName = 'CalendarWeekNumberRoot';
-CalendarFooterRoot.displayName = 'CalendarFooterRoot';
+CalendarRoot.displayName = "CalendarRoot";
+CalendarHeaderRoot.displayName = "CalendarHeaderRoot";
+CalendarHeaderPrevButtonRoot.displayName = "CalendarHeaderPrevButtonRoot";
+CalendarHeaderNextButtonRoot.displayName = "CalendarHeaderNextButtonRoot";
+CalendarHeaderTitleRoot.displayName = "CalendarHeaderTitleRoot";
+CalendarHeaderMonthSelectRoot.displayName = "CalendarHeaderMonthSelectRoot";
+CalendarHeaderYearSelectRoot.displayName = "CalendarHeaderYearSelectRoot";
+CalendarWeekDaysHeaderRoot.displayName = "CalendarWeekDaysHeaderRoot";
+CalendarWeekDayRoot.displayName = "CalendarWeekDayRoot";
+CalendarBodyRoot.displayName = "CalendarBodyRoot";
+CalendarGridRoot.displayName = "CalendarGridRoot";
+CalendarWeekRoot.displayName = "CalendarWeekRoot";
+CalendarDayRoot.displayName = "CalendarDayRoot";
+CalendarDayTextRoot.displayName = "CalendarDayTextRoot";
+CalendarDayIndicatorRoot.displayName = "CalendarDayIndicatorRoot";
+CalendarWeekNumberRoot.displayName = "CalendarWeekNumberRoot";
+CalendarFooterRoot.displayName = "CalendarFooterRoot";

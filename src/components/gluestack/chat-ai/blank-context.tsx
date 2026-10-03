@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useContext } from 'react';
-import type { SharedValue } from 'react-native-reanimated';
-import { useSharedValue } from 'react-native-reanimated';
+import { createContext, ReactNode, useContext } from "react";
+import type { SharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
 type BlankContextType = {
   blankSize: SharedValue<number>;
@@ -34,6 +34,6 @@ export const BlankProvider = ({ children }: { children: ReactNode }) => {
 export const useBlankContext = () => {
   const context = useContext(BlankContext);
   if (!context)
-    throw new Error('useBlankContext must be used inside BlankProvider');
+    throw new Error("useBlankContext must be used inside BlankProvider");
   return context;
 };

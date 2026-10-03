@@ -1,5 +1,5 @@
-'use client';
-import React, { useContext, useState } from 'react';
+"use client";
+import React, { useContext, useState } from "react";
 import {
   View,
   ViewProps,
@@ -7,24 +7,24 @@ import {
   TextInputProps,
   Pressable,
   Text,
-} from 'react-native';
-import { tva } from '@gluestack-ui/utils/nativewind-utils';
-import { ChatContext } from './context';
+} from "react-native";
+import { tva } from "@gluestack-ui/utils/nativewind-utils";
+import { ChatContext } from "./context";
 
 const inputContainerStyle = tva({
-  base: 'flex-row items-center p-2 border-t border-border bg-background',
+  base: "flex-row items-center p-2 border-t border-border bg-background",
 });
 
 const inputStyle = tva({
-  base: 'flex-1 p-2 bg-muted rounded-lg text-foreground',
+  base: "flex-1 p-2 bg-muted rounded-lg text-foreground",
 });
 
 const sendButtonStyle = tva({
-  base: 'ml-2 px-4 py-2 bg-primary rounded-lg',
+  base: "ml-2 px-4 py-2 bg-primary rounded-lg",
 });
 
 const sendButtonTextStyle = tva({
-  base: 'text-primary-foreground font-medium',
+  base: "text-primary-foreground font-medium",
 });
 
 interface ChatInputProps extends ViewProps {
@@ -34,7 +34,7 @@ interface ChatInputProps extends ViewProps {
   sendButtonText?: string;
   renderSendButton?: (
     onPress: () => void,
-    disabled: boolean
+    disabled: boolean,
   ) => React.ReactElement;
 }
 
@@ -44,17 +44,17 @@ export const ChatInput = React.forwardRef<
 >(function ChatInput(
   {
     onSend: onSendProp,
-    placeholder = 'Type a message...',
+    placeholder = "Type a message...",
     inputProps,
-    sendButtonText = 'Send',
+    sendButtonText = "Send",
     renderSendButton,
     className,
     ...props
   },
-  ref
+  ref,
 ) {
   const context = useContext(ChatContext);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
   const loading = context?.loading || false;
 
@@ -67,7 +67,7 @@ export const ChatInput = React.forwardRef<
       context.send(input);
     }
 
-    setInput('');
+    setInput("");
   };
 
   const defaultSendButton = (
@@ -77,7 +77,7 @@ export const ChatInput = React.forwardRef<
       className={sendButtonStyle()}
     >
       <Text className={sendButtonTextStyle()}>
-        {loading ? '...' : sendButtonText}
+        {loading ? "..." : sendButtonText}
       </Text>
     </Pressable>
   );
@@ -107,4 +107,4 @@ export const ChatInput = React.forwardRef<
   );
 });
 
-ChatInput.displayName = 'ChatInput';
+ChatInput.displayName = "ChatInput";

@@ -12,7 +12,11 @@ export interface LibraryEntry {
 export interface LibraryRepository {
   list(parentId: string | null): Promise<LibraryEntry[]>;
   getEntry(id: string): Promise<LibraryEntry | null>;
-  create(kind: LibraryEntry["kind"], name: string, parentId: string | null): Promise<LibraryEntry>;
+  create(
+    kind: LibraryEntry["kind"],
+    name: string,
+    parentId: string | null,
+  ): Promise<LibraryEntry>;
   rename(entry: LibraryEntry, name: string): Promise<void>;
   loadDocument(id: string): Promise<DocumentData>;
   saveDocument(id: string, data: DocumentData): Promise<void>;
@@ -20,15 +24,24 @@ export interface LibraryRepository {
 
 export function normalizeName(name: string): string {
   const value = name.trim();
-  if (!value || value.length > 120) throw new Error("Use um nome entre 1 e 120 caracteres.");
+  if (!value || value.length > 120)
+    throw new Error("Use um nome entre 1 e 120 caracteres.");
   return value;
 }
 
-export function newEntry(kind: LibraryEntry["kind"], name: string, parentId: string | null): LibraryEntry {
+export function newEntry(
+  kind: LibraryEntry["kind"],
+  name: string,
+  parentId: string | null,
+): LibraryEntry {
   const now = Date.now();
   return {
     id: `${kind}_${now.toString(36)}_${Math.random().toString(36).slice(2, 12)}`,
-    kind, name: normalizeName(name), parentId, createdAt: now, updatedAt: now,
+    kind,
+    name: normalizeName(name),
+    parentId,
+    createdAt: now,
+    updatedAt: now,
   };
 }
 

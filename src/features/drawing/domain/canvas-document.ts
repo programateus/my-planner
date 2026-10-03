@@ -1,5 +1,8 @@
 import { Stroke } from "@/features/drawing/domain/entities/stroke";
-import type { PageTemplates, PlannerTemplateId } from "@/features/drawing/domain/planner-template";
+import type {
+  PageTemplates,
+  PlannerTemplateId,
+} from "@/features/drawing/domain/planner-template";
 
 export interface CanvasDocument {
   addStroke(stroke: Stroke): void;

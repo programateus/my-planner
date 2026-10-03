@@ -1,9 +1,4 @@
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useMemo,
-} from "react";
+import { createContext, type ReactNode, useContext, useMemo } from "react";
 import { useSharedValue, type SharedValue } from "react-native-reanimated";
 
 import { CommandManager } from "@/features/drawing/services/command-manager";
@@ -15,10 +10,17 @@ type DrawingSessionContextValue = {
   currentPage: SharedValue<number>;
 };
 
-const DrawingSessionContext =
-  createContext<DrawingSessionContextValue | null>(null);
+const DrawingSessionContext = createContext<DrawingSessionContextValue | null>(
+  null,
+);
 
-export function DrawingSessionProvider({ children, document }: { children: ReactNode; document: SkiaCanvasDocument }) {
+export function DrawingSessionProvider({
+  children,
+  document,
+}: {
+  children: ReactNode;
+  document: SkiaCanvasDocument;
+}) {
   const currentPage = useSharedValue(0);
   const value = useMemo(
     () => ({

@@ -1,40 +1,44 @@
-'use client';
-import { createAlert } from '@gluestack-ui/core/alert/creator';
-import { UIIcon } from '@gluestack-ui/core/icon/creator';
-import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
-import { tva, useStyleContext, withStyleContext } from '@gluestack-ui/utils/nativewind-utils';
-import { withUniwind } from 'uniwind';
-import React from 'react';
-import { Text, View } from 'react-native';
+"use client";
+import { createAlert } from "@gluestack-ui/core/alert/creator";
+import { UIIcon } from "@gluestack-ui/core/icon/creator";
+import type { VariantProps } from "@gluestack-ui/utils/nativewind-utils";
+import {
+  tva,
+  useStyleContext,
+  withStyleContext,
+} from "@gluestack-ui/utils/nativewind-utils";
+import { withUniwind } from "uniwind";
+import React from "react";
+import { Text, View } from "react-native";
 
-const SCOPE = 'ALERT';
+const SCOPE = "ALERT";
 
 const alertStyle = tva({
-  base: 'rounded-lg border px-2.5 py-2 flex-row gap-2 items-start ',
+  base: "rounded-lg border px-2.5 py-2 flex-row gap-2 items-start ",
   variants: {
     variant: {
-      default: 'bg-card border-border',
-      destructive: 'bg-card border-destructive',
+      default: "bg-card border-border",
+      destructive: "bg-card border-destructive",
     },
   },
 });
 
 const alertTextStyle = tva({
-  base: 'font-medium tracking-tight text-sm flex-1',
+  base: "font-medium tracking-tight text-sm flex-1",
   parentVariants: {
     variant: {
-      default: 'text-card-foreground',
-      destructive: 'text-destructive',
+      default: "text-card-foreground",
+      destructive: "text-destructive",
     },
   },
 });
 
 const alertIconStyle = tva({
-  base: 'fill-none w-4 h-4 mt-0.5',
+  base: "fill-none w-4 h-4 mt-0.5",
   parentVariants: {
     variant: {
-      default: 'text-card-foreground',
-      destructive: 'text-destructive',
+      default: "text-card-foreground",
+      destructive: "text-destructive",
     },
   },
 });
@@ -49,12 +53,12 @@ export const UIAlert = createAlert({
 
 type IAlertProps = Omit<
   React.ComponentPropsWithoutRef<typeof UIAlert>,
-  'context'
+  "context"
 > &
   VariantProps<typeof alertStyle>;
 
 const Alert = React.forwardRef<React.ComponentRef<typeof UIAlert>, IAlertProps>(
-  function Alert({ className, variant = 'default', ...props }, ref) {
+  function Alert({ className, variant = "default", ...props }, ref) {
     return (
       <UIAlert
         className={alertStyle({ variant, class: className })}
@@ -63,7 +67,7 @@ const Alert = React.forwardRef<React.ComponentRef<typeof UIAlert>, IAlertProps>(
         {...props}
       />
     );
-  }
+  },
 );
 
 type IAlertTextProps = React.ComponentPropsWithoutRef<typeof UIAlert.Text> &
@@ -113,8 +117,8 @@ const AlertIcon = React.forwardRef<
   );
 });
 
-Alert.displayName = 'Alert';
-AlertText.displayName = 'AlertText';
-AlertIcon.displayName = 'AlertIcon';
+Alert.displayName = "Alert";
+AlertText.displayName = "AlertText";
+AlertIcon.displayName = "AlertIcon";
 
 export { Alert, AlertIcon, AlertText };

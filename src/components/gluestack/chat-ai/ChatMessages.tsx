@@ -1,13 +1,13 @@
-'use client';
-import React, { useContext } from 'react';
-import { LegendList, LegendListProps } from '@legendapp/list/react-native';
-import { ChatContext } from './context';
-import { ChatMessage as ChatMessageComponent } from './ChatMessage';
-import { ChatMessage as ChatMessageType } from './types';
+"use client";
+import React, { useContext } from "react";
+import { LegendList, LegendListProps } from "@legendapp/list/react-native";
+import { ChatContext } from "./context";
+import { ChatMessage as ChatMessageComponent } from "./ChatMessage";
+import { ChatMessage as ChatMessageType } from "./types";
 
 interface ChatMessagesProps extends Omit<
   LegendListProps<ChatMessageType>,
-  'data' | 'renderItem'
+  "data" | "renderItem"
 > {
   renderItem?: (info: {
     item: ChatMessageType;
@@ -22,7 +22,7 @@ export const ChatMessages = React.forwardRef<
   const context = useContext(ChatContext);
 
   if (!context) {
-    throw new Error('ChatMessages must be used within a Chat component');
+    throw new Error("ChatMessages must be used within a Chat component");
   }
 
   const { messages } = context;
@@ -45,4 +45,4 @@ export const ChatMessages = React.forwardRef<
   );
 });
 
-ChatMessages.displayName = 'ChatMessages';
+ChatMessages.displayName = "ChatMessages";

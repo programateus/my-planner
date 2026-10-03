@@ -7,7 +7,8 @@ import { usePlannerPictures } from "@/features/drawing/hooks/use-planner-picture
 type PlannerTemplateContextValue = ReturnType<typeof usePageTemplates> &
   ReturnType<typeof usePlannerPictures> & { dark: boolean };
 
-const PlannerTemplateContext = createContext<PlannerTemplateContextValue | null>(null);
+const PlannerTemplateContext =
+  createContext<PlannerTemplateContextValue | null>(null);
 
 export function PlannerTemplateProvider({ children }: { children: ReactNode }) {
   const { theme } = useUniwind();
@@ -30,7 +31,9 @@ export function usePlannerTemplate() {
   const context = useContext(PlannerTemplateContext);
 
   if (!context) {
-    throw new Error("usePlannerTemplate deve ser usado dentro de PlannerTemplateProvider.");
+    throw new Error(
+      "usePlannerTemplate deve ser usado dentro de PlannerTemplateProvider.",
+    );
   }
 
   return context;

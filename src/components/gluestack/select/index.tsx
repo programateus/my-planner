@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { tva ,
+import React from "react";
+import {
+  tva,
   withStyleContext,
   useStyleContext,
-} from '@gluestack-ui/utils/nativewind-utils';
-import { UIIcon } from '@gluestack-ui/core/icon/creator';
+} from "@gluestack-ui/utils/nativewind-utils";
+import { UIIcon } from "@gluestack-ui/core/icon/creator";
 
-import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
-import { createSelect } from '@gluestack-ui/core/select/creator';
-import { withUniwind } from 'uniwind';
+import type { VariantProps } from "@gluestack-ui/utils/nativewind-utils";
+import { createSelect } from "@gluestack-ui/core/select/creator";
+import { withUniwind } from "uniwind";
 import {
   Actionsheet,
   ActionsheetContent,
@@ -23,8 +24,8 @@ import {
   ActionsheetFlatList,
   ActionsheetSectionList,
   ActionsheetSectionHeaderText,
-} from './select-actionsheet';
-import { Pressable, View, TextInput } from 'react-native';
+} from "./select-actionsheet";
+import { Pressable, View, TextInput } from "react-native";
 
 const SelectTriggerWrapper = React.forwardRef<
   React.ComponentRef<typeof Pressable>,
@@ -34,56 +35,56 @@ const SelectTriggerWrapper = React.forwardRef<
 });
 
 const selectIconStyle = tva({
-  base: 'text-foreground/50 fill-none',
+  base: "text-foreground/50 fill-none",
   parentVariants: {
     size: {
-      '2xs': 'h-3 w-3',
-      'xs': 'h-3.5 w-3.5',
-      'sm': 'h-4 w-4',
-      'md': 'h-[18px] w-[18px]',
-      'lg': 'h-5 w-5',
-      'xl': 'h-6 w-6',
+      "2xs": "h-3 w-3",
+      xs: "h-3.5 w-3.5",
+      sm: "h-4 w-4",
+      md: "h-[18px] w-[18px]",
+      lg: "h-5 w-5",
+      xl: "h-6 w-6",
     },
   },
 });
 
 const selectStyle = tva({
-  base: '',
+  base: "",
 });
 
 const selectTriggerStyle = tva({
-  base: 'border border-border rounded flex-row items-center overflow-hidden data-[hover=true]:border-primary/80 data-[focus=true]:border-primary/80 data-[disabled=true]:opacity-40 data-[disabled=true]:data-[hover=true]:border-border/80',
+  base: "border border-border rounded flex-row items-center overflow-hidden data-[hover=true]:border-primary/80 data-[focus=true]:border-primary/80 data-[disabled=true]:opacity-40 data-[disabled=true]:data-[hover=true]:border-border/80",
   variants: {
     size: {
-      xl: 'min-h-12',
-      lg: 'min-h-11',
-      md: 'min-h-10',
-      sm: 'min-h-9',
+      xl: "min-h-12",
+      lg: "min-h-11",
+      md: "min-h-10",
+      sm: "min-h-9",
     },
     variant: {
       underlined:
-        'border-0 border-b rounded-none data-[hover=true]:border-primary/80 data-[focus=true]:border-primary/80 data-[focus=true]:web:shadow-[inset_0_-1px_0_0] data-[focus=true]:web:shadow-primary/80 data-[invalid=true]:border-destructive data-[invalid=true]:web:shadow-destructive',
+        "border-0 border-b rounded-none data-[hover=true]:border-primary/80 data-[focus=true]:border-primary/80 data-[focus=true]:web:shadow-[inset_0_-1px_0_0] data-[focus=true]:web:shadow-primary/80 data-[invalid=true]:border-destructive data-[invalid=true]:web:shadow-destructive",
       outline:
-        'data-[focus=true]:border-primary/80 data-[focus=true]:web:shadow-[inset_0_0_0_1px] data-[focus=true]:data-[hover=true]:web:shadow-primary/80 data-[invalid=true]:web:shadow-[inset_0_0_0_1px] data-[invalid=true]:border-destructive data-[invalid=true]:web:shadow-destructive data-[invalid=true]:data-[hover=true]:border-destructive',
+        "data-[focus=true]:border-primary/80 data-[focus=true]:web:shadow-[inset_0_0_0_1px] data-[focus=true]:data-[hover=true]:web:shadow-primary/80 data-[invalid=true]:web:shadow-[inset_0_0_0_1px] data-[invalid=true]:border-destructive data-[invalid=true]:web:shadow-destructive data-[invalid=true]:data-[hover=true]:border-destructive",
       rounded:
-        'rounded-full data-[focus=true]:border-primary/80 data-[focus=true]:web:shadow-[inset_0_0_0_1px] data-[focus=true]:web:shadow-primary/80 data-[invalid=true]:border-destructive data-[invalid=true]:web:shadow-destructive',
+        "rounded-full data-[focus=true]:border-primary/80 data-[focus=true]:web:shadow-[inset_0_0_0_1px] data-[focus=true]:web:shadow-primary/80 data-[invalid=true]:border-destructive data-[invalid=true]:web:shadow-destructive",
     },
   },
 });
 
 const selectInputStyle = tva({
-  base: 'px-3 placeholder:text-foreground/50 web:w-full h-full text-foreground/90 pointer-events-none web:outline-none ios:leading-[0px] py-0',
+  base: "px-3 placeholder:text-foreground/50 web:w-full h-full text-foreground/90 pointer-events-none web:outline-none ios:leading-[0px] py-0",
   parentVariants: {
     size: {
-      xl: 'text-xl',
-      lg: 'text-lg',
-      md: 'text-base',
-      sm: 'text-sm',
+      xl: "text-xl",
+      lg: "text-lg",
+      md: "text-base",
+      sm: "text-sm",
     },
     variant: {
-      underlined: 'px-0',
-      outline: '',
-      rounded: 'px-4',
+      underlined: "px-0",
+      outline: "",
+      rounded: "px-4",
     },
   },
 });
@@ -110,7 +111,7 @@ const UISelect = createSelect(
     FlatList: ActionsheetFlatList,
     SectionList: ActionsheetSectionList,
     SectionHeaderText: ActionsheetSectionHeaderText,
-  }
+  },
 );
 
 type ISelectProps = VariantProps<typeof selectStyle> &
@@ -138,8 +139,8 @@ const SelectTrigger = React.forwardRef<
   React.ComponentRef<typeof UISelect.Trigger>,
   ISelectTriggerProps
 >(function SelectTrigger(
-  { className, size = 'md', variant = 'outline', ...props },
-  ref
+  { className, size = "md", variant = "outline", ...props },
+  ref,
 ) {
   return (
     <UISelect.Trigger
@@ -186,7 +187,7 @@ const SelectIcon = React.forwardRef<
   ISelectIcon
 >(function SelectIcon({ className, size, ...props }, ref) {
   const { size: parentSize } = useStyleContext();
-  if (typeof size === 'number') {
+  if (typeof size === "number") {
     return (
       <UISelect.Icon
         ref={ref}
@@ -223,10 +224,10 @@ const SelectIcon = React.forwardRef<
   );
 });
 
-Select.displayName = 'Select';
-SelectTrigger.displayName = 'SelectTrigger';
-SelectInput.displayName = 'SelectInput';
-SelectIcon.displayName = 'SelectIcon';
+Select.displayName = "Select";
+SelectTrigger.displayName = "SelectTrigger";
+SelectInput.displayName = "SelectInput";
+SelectIcon.displayName = "SelectIcon";
 
 // Actionsheet Components
 const SelectPortal = UISelect.Portal;

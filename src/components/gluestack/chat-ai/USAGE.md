@@ -22,11 +22,11 @@ import {
   ChatMessages,
   ChatInput,
   useChat,
-} from '@/components/ui/chat-ai';
+} from "@/components/ui/chat-ai";
 
 function MyChatScreen() {
   const { messages, send, loading, error } = useChat({
-    api: 'https://api.example.com/chat',
+    api: "https://api.example.com/chat",
   });
 
   return (
@@ -49,14 +49,14 @@ function MyChatScreen() {
 If you want to handle the API calls yourself:
 
 ```tsx
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Chat,
   ChatMessages,
   ChatMessage,
   ChatInput,
-} from '@/components/ui/chat-ai';
-import type { ChatMessage as ChatMessageType } from '@/components/ui/chat-ai';
+} from "@/components/ui/chat-ai";
+import type { ChatMessage as ChatMessageType } from "@/components/ui/chat-ai";
 
 function MyCustomChat() {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
@@ -68,14 +68,14 @@ function MyCustomChat() {
     // Add user message
     const userMessage: ChatMessageType = {
       id: Date.now().toString(),
-      role: 'user',
+      role: "user",
       content: input,
     };
     setMessages((prev) => [...prev, userMessage]);
 
     // Call your API
-    const response = await fetch('/api/chat', {
-      method: 'POST',
+    const response = await fetch("/api/chat", {
+      method: "POST",
       body: JSON.stringify({ message: input }),
     });
     const data = await response.json();
@@ -83,7 +83,7 @@ function MyCustomChat() {
     // Add assistant response
     const assistantMessage: ChatMessageType = {
       id: (Date.now() + 1).toString(),
-      role: 'assistant',
+      role: "assistant",
       content: data.content,
     };
     setMessages((prev) => [...prev, assistantMessage]);
@@ -115,8 +115,8 @@ The `ChatMessage` component accepts `className` and `textClassName` props for cu
     renderItem={({ item }) => (
       <ChatMessage
         message={item}
-        className={item.role === 'user' ? 'bg-blue-500' : 'bg-gray-200'}
-        textClassName={item.role === 'user' ? 'text-white' : 'text-black'}
+        className={item.role === "user" ? "bg-blue-500" : "bg-gray-200"}
+        textClassName={item.role === "user" ? "text-white" : "text-black"}
       />
     )}
   />
@@ -171,7 +171,7 @@ const {
 ```typescript
 interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp?: number;
 }
@@ -184,9 +184,7 @@ Your API endpoint should accept POST requests with:
 ```json
 {
   "message": "user's message",
-  "messages": [
-    /* array of all messages */
-  ]
+  "messages": [/* array of all messages */]
 }
 ```
 

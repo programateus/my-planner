@@ -3,7 +3,10 @@ import { useCallback, useMemo } from "react";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-import type { Stroke, StrokeSample } from "@/features/drawing/domain/entities/stroke";
+import type {
+  Stroke,
+  StrokeSample,
+} from "@/features/drawing/domain/entities/stroke";
 import type { Style } from "@/features/drawing/domain/entities/style";
 import { HIGHLIGHTER_OPACITY } from "@/features/drawing/domain/highlighter";
 import {
@@ -55,7 +58,12 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
 
   const commitStroke = useCallback(
     (stroke: RenderedStroke) => {
-      onCommit({ id: stroke.id, pageIndex: stroke.pageIndex, points: stroke.points, style: stroke.style });
+      onCommit({
+        id: stroke.id,
+        pageIndex: stroke.pageIndex,
+        points: stroke.points,
+        style: stroke.style,
+      });
 
       const strokeId = stroke.id;
       pendingStrokes.modify((previous) => {
@@ -87,7 +95,16 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
         points: [sample],
       });
     },
-    [color, width, tool, currentColor, currentOpacity, currentBlendMode, currentPage, draft],
+    [
+      color,
+      width,
+      tool,
+      currentColor,
+      currentOpacity,
+      currentBlendMode,
+      currentPage,
+      draft,
+    ],
   );
 
   const updateStroke = useCallback(
@@ -125,7 +142,11 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
         y: point.y,
         width: current.geometry.lastPoint.width,
       };
-      const geometry = appendSmoothedPoint(current.builder, current.geometry, sample);
+      const geometry = appendSmoothedPoint(
+        current.builder,
+        current.geometry,
+        sample,
+      );
       if (geometry !== current.geometry) current.points.push(sample);
       appendStrokeSegment(current.builder, geometry.cursor, geometry.lastPoint);
       const stroke: RenderedStroke = {

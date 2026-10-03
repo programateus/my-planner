@@ -1,19 +1,19 @@
-import { OverlayProvider } from '@gluestack-ui/core/overlay/creator';
-import { ToastProvider } from '@gluestack-ui/core/toast/creator';
-import { type ReactNode, useEffect } from 'react';
-import { View, type ViewProps } from 'react-native';
-import { Uniwind } from 'uniwind';
+import { OverlayProvider } from "@gluestack-ui/core/overlay/creator";
+import { ToastProvider } from "@gluestack-ui/core/toast/creator";
+import { type ReactNode, useEffect } from "react";
+import { View, type ViewProps } from "react-native";
+import { Uniwind } from "uniwind";
 
-export type ModeType = 'light' | 'dark' | 'system';
+export type ModeType = "light" | "dark" | "system";
 
 type GluestackUIProviderProps = {
   mode?: ModeType;
   children?: ReactNode;
-  style?: ViewProps['style'];
+  style?: ViewProps["style"];
 };
 
 export function GluestackUIProvider({
-  mode = 'system',
+  mode = "system",
   children,
   style,
 }: GluestackUIProviderProps) {
@@ -22,7 +22,7 @@ export function GluestackUIProvider({
   }, [mode]);
 
   return (
-    <View style={[{ flex: 1, height: '100%', width: '100%' }, style]}>
+    <View style={[{ flex: 1, height: "100%", width: "100%" }, style]}>
       <OverlayProvider>
         <ToastProvider>{children}</ToastProvider>
       </OverlayProvider>

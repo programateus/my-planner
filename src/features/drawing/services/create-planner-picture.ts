@@ -1,9 +1,20 @@
 import { PaintStyle, Skia, type SkTypeface } from "@shopify/react-native-skia";
 
 import type { PlannerTemplateId } from "@/features/drawing/domain/planner-template";
-import { PAGE_HEIGHT, PAGE_WIDTH } from "@/features/drawing/geometry/notebook-geometry";
+import {
+  PAGE_HEIGHT,
+  PAGE_WIDTH,
+} from "@/features/drawing/geometry/notebook-geometry";
 
-const WEEKDAYS = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
+const WEEKDAYS = [
+  "SEGUNDA",
+  "TERÇA",
+  "QUARTA",
+  "QUINTA",
+  "SEXTA",
+  "SÁBADO",
+  "DOMINGO",
+];
 
 export function createPlannerPicture(
   template: PlannerTemplateId,
@@ -11,15 +22,35 @@ export function createPlannerPicture(
   dark: boolean,
 ) {
   const recorder = Skia.PictureRecorder();
-  const canvas = recorder.beginRecording(Skia.XYWHRect(0, 0, PAGE_WIDTH, PAGE_HEIGHT));
+  const canvas = recorder.beginRecording(
+    Skia.XYWHRect(0, 0, PAGE_WIDTH, PAGE_HEIGHT),
+  );
   const paint = Skia.Paint();
   paint.setAntiAlias(true);
   const font = Skia.Font(typeface, 14);
   const colors = dark
-    ? { text: "#DDE2E8", muted: "#A2ABB8", line: "#454C57", accent: "#A5B7CA", tint: "#303640" }
-    : { text: "#334155", muted: "#7C8898", line: "#DCE2E9", accent: "#69849E", tint: "#F1F5F8" };
+    ? {
+        text: "#DDE2E8",
+        muted: "#A2ABB8",
+        line: "#454C57",
+        accent: "#A5B7CA",
+        tint: "#303640",
+      }
+    : {
+        text: "#334155",
+        muted: "#7C8898",
+        line: "#DCE2E9",
+        accent: "#69849E",
+        tint: "#F1F5F8",
+      };
 
-  function text(value: string, x: number, y: number, size = 14, color = colors.text) {
+  function text(
+    value: string,
+    x: number,
+    y: number,
+    size = 14,
+    color = colors.text,
+  ) {
     paint.setStyle(PaintStyle.Fill);
     paint.setColor(Skia.Color(color));
     font.setSize(size);
@@ -33,14 +64,27 @@ export function createPlannerPicture(
     canvas.drawLine(x, y, endX, endY, paint);
   }
 
-  function box(x: number, y: number, width: number, height: number, fill = false) {
+  function box(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    fill = false,
+  ) {
     paint.setStyle(fill ? PaintStyle.Fill : PaintStyle.Stroke);
     paint.setStrokeWidth(1);
     paint.setColor(Skia.Color(fill ? colors.tint : colors.line));
     canvas.drawRect(Skia.XYWHRect(x, y, width, height), paint);
   }
 
-  function ruled(x: number, y: number, width: number, rows: number, spacing = 32, checklist = false) {
+  function ruled(
+    x: number,
+    y: number,
+    width: number,
+    rows: number,
+    spacing = 32,
+    checklist = false,
+  ) {
     for (let row = 0; row < rows; row++) {
       const baseline = y + row * spacing;
       if (checklist) box(x, baseline - 14, 12, 12);
@@ -53,8 +97,27 @@ export function createPlannerPicture(
   }
 
   text("MEU PLANNER", 48, 56, 12, colors.muted);
-  text(template === "daily" ? "Um dia de cada vez" : template === "weekly" ? "Minha semana" : "Meu mês", 48, 102, 34);
-  text(template === "daily" ? "DATA" : template === "weekly" ? "SEMANA DE" : "MÊS / ANO", 48, 146, 12, colors.muted);
+  text(
+    template === "daily"
+      ? "Um dia de cada vez"
+      : template === "weekly"
+        ? "Minha semana"
+        : "Meu mês",
+    48,
+    102,
+    34,
+  );
+  text(
+    template === "daily"
+      ? "DATA"
+      : template === "weekly"
+        ? "SEMANA DE"
+        : "MÊS / ANO",
+    48,
+    146,
+    12,
+    colors.muted,
+  );
   line(template === "weekly" ? 130 : 120, 149, 330);
   line(48, 174, 672);
 
@@ -68,7 +131,13 @@ export function createPlannerPicture(
       section("TAREFAS", 396, 496);
       for (let hour = 0; hour < 12; hour++) {
         const y = 535 + hour * 28;
-        text(`${String(hour + 7).padStart(2, "0")}:00`, 48, y - 6, 12, colors.muted);
+        text(
+          `${String(hour + 7).padStart(2, "0")}:00`,
+          48,
+          y - 6,
+          12,
+          colors.muted,
+        );
         line(100, y, 360);
       }
       ruled(396, 535, 276, 12, 28, true);
@@ -100,11 +169,22 @@ export function createPlannerPicture(
       const gridY = 262;
       box(48, 230, 624, 32, true);
       for (let day = 0; day < 7; day++) {
-        text(["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"][day], 48 + day * cellWidth + 14, 251, 12, colors.accent);
+        text(
+          ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"][day],
+          48 + day * cellWidth + 14,
+          251,
+          12,
+          colors.accent,
+        );
       }
       box(48, gridY, 624, 528);
       for (let column = 1; column < 7; column++) {
-        line(48 + column * cellWidth, gridY, 48 + column * cellWidth, gridY + 528);
+        line(
+          48 + column * cellWidth,
+          gridY,
+          48 + column * cellWidth,
+          gridY + 528,
+        );
       }
       for (let row = 0; row < 6; row++) {
         if (row > 0) line(48, gridY + row * 88, 672);

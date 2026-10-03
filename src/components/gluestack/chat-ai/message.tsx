@@ -4,7 +4,7 @@ import React, {
   useContext,
   useState,
   useMemo,
-} from 'react';
+} from "react";
 import {
   View,
   Text,
@@ -12,16 +12,16 @@ import {
   Alert,
   Image,
   ViewStyle,
-} from 'react-native';
-import { ChevronLeft, ChevronRight } from 'lucide-react-native';
-import type { UIMessage } from 'ai';
-import Animated from 'react-native-reanimated';
-import { useUserMessageAnimation } from './userAnimation';
-import { useBlankSize } from './useBlank';
-import Markdown, { type RenderRules } from 'react-native-markdown-display';
+} from "react-native";
+import { ChevronLeft, ChevronRight } from "lucide-react-native";
+import type { UIMessage } from "ai";
+import Animated from "react-native-reanimated";
+import { useUserMessageAnimation } from "./userAnimation";
+import { useBlankSize } from "./useBlank";
+import Markdown, { type RenderRules } from "react-native-markdown-display";
 
 type MessageContextType = {
-  role: UIMessage['role'];
+  role: UIMessage["role"];
   message?: UIMessage;
 };
 
@@ -31,7 +31,7 @@ const useMessageContext = () => {
   const context = useContext(MessageContext);
   if (!context) {
     throw new Error(
-      'MessageToolbar and other children must be used inside <Message>'
+      "MessageToolbar and other children must be used inside <Message>",
     );
   }
   return context;
@@ -42,7 +42,7 @@ const mergeRefs = <T,>(
 ): React.RefCallback<T> => {
   return (node: T | null) => {
     refs.forEach((ref) => {
-      if (typeof ref === 'function') {
+      if (typeof ref === "function") {
         ref(node);
       } else if (ref != null) {
         (ref as React.MutableRefObject<T | null>).current = node;
@@ -52,7 +52,7 @@ const mergeRefs = <T,>(
 };
 
 export type MessageProps = {
-  role: UIMessage['role'];
+  role: UIMessage["role"];
   children: React.ReactNode;
   className?: string;
   index: number;
@@ -75,18 +75,18 @@ export const Message = memo(
     } = useUserMessageAnimation({ disabled: !isUserFirstMessage });
 
     const { ref: blankRef, onLayout: blankOnLayout } = useBlankSize({
-      role: 'user',
+      role: "user",
       disabled: !isUserFirstMessage,
     });
 
     const combinedRef = useMemo(
       () => mergeRefs(animRef, blankRef),
-      [animRef, blankRef]
+      [animRef, blankRef],
     );
 
     const contextValue = useMemo(() => ({ role, message }), [role, message]);
 
-    if (role === 'user') {
+    if (role === "user") {
       return (
         <MessageContext.Provider value={contextValue}>
           <Animated.View
@@ -96,7 +96,7 @@ export const Message = memo(
               blankOnLayout?.(event);
             }}
             style={animationStyle as ViewStyle}
-            className={`group mt-4 flex w-full max-w-[95%] flex-col gap-2 ${className || ''}`}
+            className={`group mt-4 flex w-full max-w-[95%] flex-col gap-2 ${className || ""}`}
           >
             {children}
           </Animated.View>
@@ -109,13 +109,13 @@ export const Message = memo(
         <Animated.View
           ref={blankRef}
           onLayout={blankOnLayout}
-          className={`group flex w-full max-w-[95%] flex-col gap-2 ${className || ''}`}
+          className={`group flex w-full max-w-[95%] flex-col gap-2 ${className || ""}`}
         >
           {children}
         </Animated.View>
       </MessageContext.Provider>
     );
-  }
+  },
 );
 
 export const MessageContent = memo(
@@ -123,16 +123,16 @@ export const MessageContent = memo(
     const { role } = useMessageContext();
 
     const roleStyles =
-      role === 'user' ? 'self-end bg-muted max-w-[90%] px-4' : 'self-start ';
+      role === "user" ? "self-end bg-muted max-w-[90%] px-4" : "self-start ";
 
     return (
       <View
-        className={`flex w-fit min-w-0 flex-col justify-center gap-2 overflow-hidden text-base  py-3 rounded-3xl ${roleStyles} ${className || ''}`}
+        className={`flex w-fit min-w-0 flex-col justify-center gap-2 overflow-hidden text-base  py-3 rounded-3xl ${roleStyles} ${className || ""}`}
       >
         {children}
       </View>
     );
-  }
+  },
 );
 
 export const MessageResponse = memo(({ message }: { message: UIMessage }) => {
@@ -154,12 +154,12 @@ export const MessageResponse = memo(({ message }: { message: UIMessage }) => {
     },
 
     list_item: (node, children, parent) => {
-      const isOrdered = parent?.some(node => node.type === 'ordered_list');
+      const isOrdered = parent?.some((node) => node.type === "ordered_list");
       const index = node.index ?? 0;
       return (
         <View key={node.key} className="flex-row items-start mb-1">
           <Text className="text-foreground mr-2">
-            {isOrdered ? `${index + 1}.` : '•'}
+            {isOrdered ? `${index + 1}.` : "•"}
           </Text>
           <View className="flex-1">
             <View className="flex-1">{children}</View>
@@ -211,11 +211,11 @@ export const MessageResponse = memo(({ message }: { message: UIMessage }) => {
   };
 
   if (!message?.parts) {
-    return <Markdown rules={markdownRules}>{''}</Markdown>;
+    return <Markdown rules={markdownRules}>{""}</Markdown>;
   }
 
-  const hasText = message.parts.some((p) => p.type === 'text');
-  const hasFile = message.parts.some((p) => p.type === 'file');
+  const hasText = message.parts.some((p) => p.type === "text");
+  const hasFile = message.parts.some((p) => p.type === "file");
 
   if (!hasText && !hasFile) {
     return <Text className="text-muted-foreground">Thinking...</Text>;
@@ -224,16 +224,16 @@ export const MessageResponse = memo(({ message }: { message: UIMessage }) => {
   return (
     <View className="gap-2">
       {message.parts.map((part, index) => {
-        if (part.type === 'text') {
+        if (part.type === "text") {
           return (
             <Markdown key={index} rules={markdownRules}>
-              {part.text || ''}
+              {part.text || ""}
             </Markdown>
           );
         }
 
-        if (part.type === 'file') {
-          let uri = '';
+        if (part.type === "file") {
+          let uri = "";
 
           if (part.url) uri = part.url;
 
@@ -265,23 +265,23 @@ export const MessageToolbar = memo(
   ({ children, className }: MessageToolbarProps) => {
     const { role, message } = useMessageContext();
 
-    const roleStyles = role === 'user' ? 'self-end' : 'self-start';
+    const roleStyles = role === "user" ? "self-end" : "self-start";
     const hasText = message?.parts?.some(
-      (p) => p.type === 'text' && p.text?.length > 0
+      (p) => p.type === "text" && p.text?.length > 0,
     );
 
     if (!hasText) return null;
 
-    if (role === 'user') return null;
+    if (role === "user") return null;
 
     return (
       <View
-        className={`-mt-4 ml-2 flex-row items-center gap-3 ${roleStyles} ${className || ''}`}
+        className={`-mt-4 ml-2 flex-row items-center gap-3 ${roleStyles} ${className || ""}`}
       >
         {children}
       </View>
     );
-  }
+  },
 );
 
 export const MessageAction = ({
@@ -318,14 +318,14 @@ interface MessageBranchContextType {
 }
 
 const MessageBranchContext = createContext<MessageBranchContextType | null>(
-  null
+  null,
 );
 
 const useMessageBranch = () => {
   const context = useContext(MessageBranchContext);
   if (!context) {
     throw new Error(
-      'MessageBranch components must be used within <MessageBranch>'
+      "MessageBranch components must be used within <MessageBranch>",
     );
   }
   return context;
@@ -373,7 +373,7 @@ export const MessageBranch = ({
 
   return (
     <MessageBranchContext.Provider value={contextValue}>
-      <View className={`w-full gap-2 ${className || ''}`}>{children}</View>
+      <View className={`w-full gap-2 ${className || ""}`}>{children}</View>
     </MessageBranchContext.Provider>
   );
 };
@@ -385,7 +385,7 @@ export const MessageBranchContent = ({
 }) => {
   const { currentBranch, branches, setBranches } = useMessageBranch();
   const childrenArray = React.Children.toArray(
-    children
+    children,
   ) as React.ReactElement[];
 
   React.useEffect(() => {
@@ -397,7 +397,7 @@ export const MessageBranchContent = ({
   return childrenArray.map((branch, index) => (
     <View
       key={branch.key || index}
-      className={index === currentBranch ? 'flex' : 'hidden'}
+      className={index === currentBranch ? "flex" : "hidden"}
     >
       {branch}
     </View>
@@ -441,7 +441,7 @@ export const MessageBranchPage = () => {
   );
 };
 
-Message.displayName = 'Message';
-MessageContent.displayName = 'MessageContent';
-MessageResponse.displayName = 'MessageResponse';
-MessageToolbar.displayName = 'MessageToolbar';
+Message.displayName = "Message";
+MessageContent.displayName = "MessageContent";
+MessageResponse.displayName = "MessageResponse";
+MessageToolbar.displayName = "MessageToolbar";

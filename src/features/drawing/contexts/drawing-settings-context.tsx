@@ -63,7 +63,14 @@ export function DrawingSettingsProvider({ children }: { children: ReactNode }) {
       eraserWidth,
       setEraserWidth,
     }),
-    [tool, strokeColor, strokeWidth, highlighterColor, highlighterWidth, eraserWidth],
+    [
+      tool,
+      strokeColor,
+      strokeWidth,
+      highlighterColor,
+      highlighterWidth,
+      eraserWidth,
+    ],
   );
 
   return (

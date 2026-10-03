@@ -1,7 +1,7 @@
-'use client';
-import { FocusScope } from '@gluestack-ui/utils/aria';
-import { tva } from '@gluestack-ui/utils/nativewind-utils';
-import { Overlay } from '@gluestack-ui/core/overlay/creator';
+"use client";
+import { FocusScope } from "@gluestack-ui/utils/aria";
+import { tva } from "@gluestack-ui/utils/nativewind-utils";
+import { Overlay } from "@gluestack-ui/core/overlay/creator";
 import GorhomBottomSheet, {
   BottomSheetBackdrop as GorhomBottomSheetBackdrop,
   BottomSheetFlatList as GorhomBottomSheetFlatList,
@@ -11,8 +11,8 @@ import GorhomBottomSheet, {
   BottomSheetScrollView as GorhomBottomSheetScrollView,
   BottomSheetSectionList as GorhomBottomSheetSectionList,
   BottomSheetView as GorhomBottomSheetView,
-} from '@gorhom/bottom-sheet';
-import { withUniwind } from 'uniwind';
+} from "@gorhom/bottom-sheet";
+import { withUniwind } from "uniwind";
 import React, {
   createContext,
   forwardRef,
@@ -22,41 +22,47 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import type { PressableProps, TextInputProps, TextProps } from 'react-native';
-import { Keyboard, Platform, Text, View , Pressable as RNPressable } from 'react-native';
+} from "react";
+import type { PressableProps, TextInputProps, TextProps } from "react-native";
+import {
+  Keyboard,
+  Platform,
+  Text,
+  View,
+  Pressable as RNPressable,
+} from "react-native";
 
-import { Pressable as GGHPressable } from 'react-native-gesture-handler';
+import { Pressable as GGHPressable } from "react-native-gesture-handler";
 
 const bottomSheetBackdropStyle = tva({
-  base: 'absolute inset-0 bg-black opacity-50',
+  base: "absolute inset-0 bg-black opacity-50",
 });
 
 const bottomSheetContentStyle = tva({
-  base: 'px-4 gap-2',
+  base: "px-4 gap-2",
 });
 
 const bottomSheetTriggerStyle = tva({
-  base: 'p-4 rounded-lg border border-border/90',
+  base: "p-4 rounded-lg border border-border/90",
 });
 
 const bottomSheetHandleStyle = tva({
-  base: 'py-3 w-full items-center rounded-t-xl',
+  base: "py-3 w-full items-center rounded-t-xl",
 });
 
 const bottomSheetItemStyle = tva({
-  base: 'p-3 flex-row items-center rounded-sm w-full disabled:opacity-40 web:pointer-events-auto disabled:cursor-not-allowed hover:bg-accent/40 active:bg-accent/50 data-[focus=true]:bg-accent/20 web:data-[focus-visible=true]:bg-accent/40',
+  base: "p-3 flex-row items-center rounded-sm w-full disabled:opacity-40 web:pointer-events-auto disabled:cursor-not-allowed hover:bg-accent/40 active:bg-accent/50 data-[focus=true]:bg-accent/20 web:data-[focus-visible=true]:bg-accent/40",
 });
 const bottomSheetItemTextStyle = tva({
-  base: 'text-foreground font-normal text-sm',
+  base: "text-foreground font-normal text-sm",
 });
 
 const bottomSheetFooterStyle = tva({
-  base: 'p-4 border-t border-border/90',
+  base: "p-4 border-t border-border/90",
 });
 
 const bottomSheetTextInputStyle = tva({
-  base: 'flex-1 text-foreground text-sm md:text-sm py-1 placeholder:text-muted-foreground  web:outline-none ios:leading-[0px] web:cursor-text  h-9 w-full flex-row items-center rounded-md border border-border dark:bg-input/30 bg-transparent shadow-xs overflow-hidden px-3 gap-2',
+  base: "flex-1 text-foreground text-sm md:text-sm py-1 placeholder:text-muted-foreground  web:outline-none ios:leading-[0px] web:cursor-text  h-9 w-full flex-row items-center rounded-md border border-border dark:bg-input/30 bg-transparent shadow-xs overflow-hidden px-3 gap-2",
 });
 
 type BottomSheetContextValue = {
@@ -70,10 +76,10 @@ type BottomSheetContextValue = {
 
 const BottomSheetContext = createContext<BottomSheetContextValue>({
   bottomSheetRef: { current: null! },
-  handleClose: () => { },
-  handleOpen: () => { },
+  handleClose: () => {},
+  handleOpen: () => {},
   isVisible: false,
-  handleSheetChanges: () => { },
+  handleSheetChanges: () => {},
   currentIndex: -1,
 });
 
@@ -106,7 +112,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, IBottomSheetRootProps>(
         setIsVisible(true);
         onOpen?.();
       },
-      [defaultSnapIndex, onOpen]
+      [defaultSnapIndex, onOpen],
     );
 
     const handleClose = useCallback(() => {
@@ -125,7 +131,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, IBottomSheetRootProps>(
           setIsVisible(true);
         }
       },
-      [onClose, onChange]
+      [onClose, onChange],
     );
 
     const snapToIndex = useCallback((index: number) => {
@@ -154,7 +160,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, IBottomSheetRootProps>(
         expand,
         collapse,
       }),
-      [handleOpen, handleClose, snapToIndex, expand, collapse]
+      [handleOpen, handleClose, snapToIndex, expand, collapse],
     );
 
     const contextValue = useMemo(
@@ -166,7 +172,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, IBottomSheetRootProps>(
         handleSheetChanges,
         currentIndex,
       }),
-      [handleClose, handleOpen, isVisible, handleSheetChanges, currentIndex]
+      [handleClose, handleOpen, isVisible, handleSheetChanges, currentIndex],
     );
 
     return (
@@ -174,16 +180,16 @@ export const BottomSheet = forwardRef<BottomSheetRef, IBottomSheetRootProps>(
         {children}
       </BottomSheetContext.Provider>
     );
-  }
+  },
 );
 
-BottomSheet.displayName = 'BottomSheet';
+BottomSheet.displayName = "BottomSheet";
 
 const StyledGorhomBottomSheet = withUniwind(GorhomBottomSheet);
 
 type IBottomSheetPortalProps = Omit<
   React.ComponentProps<typeof GorhomBottomSheet>,
-  'ref' | 'index'
+  "ref" | "index"
 > & {
   className?: string;
   backgroundClassName?: string;
@@ -204,7 +210,9 @@ export const BottomSheetPortal = ({
     useContext(BottomSheetContext);
 
   const memoizedSnapPoints = snapPoints;
-  const resolvedSnapPoints = Array.isArray(snapPoints) ? snapPoints : snapPoints?.value;
+  const resolvedSnapPoints = Array.isArray(snapPoints)
+    ? snapPoints
+    : snapPoints?.value;
 
   if (!isVisible) return null;
 
@@ -261,7 +269,9 @@ export const BottomSheetTrigger = ({
   );
 };
 
-type IBottomSheetBackdropProps = React.ComponentProps<typeof GorhomBottomSheetBackdrop> & {
+type IBottomSheetBackdropProps = React.ComponentProps<
+  typeof GorhomBottomSheetBackdrop
+> & {
   className?: string;
 };
 
@@ -270,7 +280,7 @@ export const BottomSheetBackdrop = ({
   appearsOnIndex = 0,
   opacity = 0.5,
   className,
-  pressBehavior = 'close',
+  pressBehavior = "close",
   ...props
 }: IBottomSheetBackdropProps) => {
   return (
@@ -329,10 +339,10 @@ export const BottomSheetContent = ({
   const { handleClose, isVisible } = useContext(BottomSheetContext);
 
   const keyDownHandlers = useMemo(() => {
-    if (Platform.OS !== 'web') return {};
+    if (Platform.OS !== "web") return {};
     return {
       onKeyDown: (e: React.KeyboardEvent) => {
-        if (e.key === 'Escape') {
+        if (e.key === "Escape") {
           e.preventDefault();
           handleClose();
         }
@@ -342,7 +352,7 @@ export const BottomSheetContent = ({
 
   const content = props.children;
   const wrappedContent =
-    Platform.OS === 'web' && isVisible && focusScope ? (
+    Platform.OS === "web" && isVisible && focusScope ? (
       <FocusScope contain={isVisible} autoFocus restoreFocus>
         {content}
       </FocusScope>

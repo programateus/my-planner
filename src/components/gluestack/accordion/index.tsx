@@ -1,55 +1,54 @@
-'use client';
-import { H3 } from '@expo/html-elements';
+"use client";
+import { H3 } from "@expo/html-elements";
 import {
   AccordionItemContext,
   createAccordion,
-} from '@gluestack-ui/core/accordion/creator';
-import { UIIcon } from '@gluestack-ui/core/icon/creator';
-import { tva } from '@gluestack-ui/utils/nativewind-utils';
-import { withUniwind } from 'uniwind';
-import React from 'react';
-import { Platform, Pressable, Text, TextProps, View } from 'react-native';
-import { AnimatedHeight } from './AccordionAnimatedHeight';
-import { AnimatedIcon } from './AccordionAnimatedIcon';
-import { accordionAnimationConfig } from './animation-config';
+} from "@gluestack-ui/core/accordion/creator";
+import { UIIcon } from "@gluestack-ui/core/icon/creator";
+import { tva } from "@gluestack-ui/utils/nativewind-utils";
+import { withUniwind } from "uniwind";
+import React from "react";
+import { Platform, Pressable, Text, TextProps, View } from "react-native";
+import { AnimatedHeight } from "./AccordionAnimatedHeight";
+import { AnimatedIcon } from "./AccordionAnimatedIcon";
+import { accordionAnimationConfig } from "./animation-config";
 
 /** Styles */
 
 const accordionStyle = tva({
-  base: 'w-full',
+  base: "w-full",
 });
 
 const accordionItemStyle = tva({
-  base: '',
+  base: "",
 });
 
 const accordionTitleTextStyle = tva({
-  base: 'text-foreground font-medium flex-1 text-left text-sm',
+  base: "text-foreground font-medium flex-1 text-left text-sm",
 });
 
 const accordionIconStyle = tva({
-  base: 'text-muted-foreground fill-none h-4 w-4',
+  base: "text-muted-foreground fill-none h-4 w-4",
 });
 
 const accordionContentTextStyle = tva({
-  base: 'text-foreground text-sm font-normal',
+  base: "text-foreground text-sm font-normal",
 });
 
 const accordionHeaderStyle = tva({
-  base: 'py-2.5 m-0',
+  base: "py-2.5 m-0",
 });
 
 const accordionContentStyle = tva({
-  base: 'pb-4',
+  base: "pb-4",
 });
 
 const accordionTriggerStyle = tva({
-
-  base: 'w-full flex-row justify-between items-center web:outline-none focus:outline-none data-[disabled=true]:opacity-40 data-[disabled=true]:cursor-not-allowed data-[focus-visible=true]:bg-background/10 gap-3',
+  base: "w-full flex-row justify-between items-center web:outline-none focus:outline-none data-[disabled=true]:opacity-40 data-[disabled=true]:cursor-not-allowed data-[focus-visible=true]:bg-background/10 gap-3",
 });
 
 const Header = (
-  Platform.OS === 'web' ? H3 : View
+  Platform.OS === "web" ? H3 : View
 ) as React.ComponentType<TextProps>;
 
 const StyledUIIcon = withUniwind(UIIcon);
@@ -64,7 +63,6 @@ const UIAccordion = createAccordion({
   ContentText: Text,
   Content: View,
 });
-
 
 type IAccordionProps = React.ComponentPropsWithoutRef<typeof UIAccordion>;
 
@@ -221,15 +219,22 @@ const AccordionTitleText = React.forwardRef<
   );
 });
 
-Accordion.displayName = 'Accordion';
-AccordionItem.displayName = 'AccordionItem';
-AccordionHeader.displayName = 'AccordionHeader';
-AccordionTrigger.displayName = 'AccordionTrigger';
-AccordionTitleText.displayName = 'AccordionTitleText';
-AccordionContentText.displayName = 'AccordionContentText';
-AccordionIcon.displayName = 'AccordionIcon';
-AccordionContent.displayName = 'AccordionContent';
+Accordion.displayName = "Accordion";
+AccordionItem.displayName = "AccordionItem";
+AccordionHeader.displayName = "AccordionHeader";
+AccordionTrigger.displayName = "AccordionTrigger";
+AccordionTitleText.displayName = "AccordionTitleText";
+AccordionContentText.displayName = "AccordionContentText";
+AccordionIcon.displayName = "AccordionIcon";
+AccordionContent.displayName = "AccordionContent";
 
 export {
-  Accordion, AccordionContent, AccordionContentText, AccordionHeader, AccordionIcon, AccordionItem, AccordionTitleText, AccordionTrigger
+  Accordion,
+  AccordionContent,
+  AccordionContentText,
+  AccordionHeader,
+  AccordionIcon,
+  AccordionItem,
+  AccordionTitleText,
+  AccordionTrigger,
 };

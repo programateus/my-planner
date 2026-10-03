@@ -1,6 +1,10 @@
 import { Scan } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Animated, { FadeIn, FadeOut, useAnimatedReaction } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedReaction,
+} from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
 import { Box } from "@/components/gluestack/box";
@@ -20,30 +24,36 @@ export function ViewportControls({ viewport }: { viewport: CanvasViewport }) {
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { scale, size, pinching, centerCurrentPage } = viewport;
 
-  const updateZoom = useCallback((percent: number, zooming: boolean, changed: boolean) => {
-    if (zooming && changed) visible.current = true;
-    if (!visible.current) return;
+  const updateZoom = useCallback(
+    (percent: number, zooming: boolean, changed: boolean) => {
+      if (zooming && changed) visible.current = true;
+      if (!visible.current) return;
 
-    setZoomPercent(percent);
-    if (hideTimeout.current !== null) clearTimeout(hideTimeout.current);
-    hideTimeout.current = null;
-    if (!zooming) {
-      hideTimeout.current = setTimeout(() => {
-        visible.current = false;
-        hideTimeout.current = null;
-        setZoomPercent(null);
-      }, ZOOM_CONTROLS_DURATION);
-    }
-  }, []);
+      setZoomPercent(percent);
+      if (hideTimeout.current !== null) clearTimeout(hideTimeout.current);
+      hideTimeout.current = null;
+      if (!zooming) {
+        hideTimeout.current = setTimeout(() => {
+          visible.current = false;
+          hideTimeout.current = null;
+          setZoomPercent(null);
+        }, ZOOM_CONTROLS_DURATION);
+      }
+    },
+    [],
+  );
 
-  useEffect(() => () => {
-    if (hideTimeout.current !== null) clearTimeout(hideTimeout.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (hideTimeout.current !== null) clearTimeout(hideTimeout.current);
+    },
+    [],
+  );
 
   useAnimatedReaction(
     () => ({
       percent: size.get().width
-        ? Math.round(scale.get() / getFitScale(size.get().width) * 100)
+        ? Math.round((scale.get() / getFitScale(size.get().width)) * 100)
         : 100,
       zooming: pinching.get(),
     }),

@@ -17,4 +17,6 @@ export const PLANNER_TEMPLATES = [
 ] as const;
 
 export type PlannerTemplateId = (typeof PLANNER_TEMPLATES)[number]["id"];
-export type PageTemplates = Readonly<Partial<Record<number, PlannerTemplateId>>>;
+export type PageTemplates = Readonly<
+  Partial<Record<number, PlannerTemplateId>>
+>;

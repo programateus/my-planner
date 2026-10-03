@@ -25,7 +25,10 @@ import { Text } from "@/components/gluestack/text";
 import { useDrawingSession } from "@/features/drawing/contexts/drawing-session-context";
 import { usePlannerTemplate } from "@/features/drawing/contexts/planner-template-context";
 import { PLANNER_TEMPLATES } from "@/features/drawing/domain/planner-template";
-import { PAGE_HEIGHT, PAGE_WIDTH } from "@/features/drawing/geometry/notebook-geometry";
+import {
+  PAGE_HEIGHT,
+  PAGE_WIDTH,
+} from "@/features/drawing/geometry/notebook-geometry";
 
 const PREVIEW_WIDTH = 64;
 const PREVIEW_HEIGHT = (PREVIEW_WIDTH * PAGE_HEIGHT) / PAGE_WIDTH;

@@ -1,9 +1,8 @@
-'use client';
-import { ActivityIndicator } from 'react-native';
-import React from 'react';
-import { tva } from '@gluestack-ui/utils/nativewind-utils';
-import { withUniwind } from 'uniwind';
-
+"use client";
+import { ActivityIndicator } from "react-native";
+import React from "react";
+import { tva } from "@gluestack-ui/utils/nativewind-utils";
+import { withUniwind } from "uniwind";
 
 const StyledActivityIndicator = withUniwind(ActivityIndicator);
 const spinnerStyle = tva({});
@@ -16,10 +15,10 @@ const Spinner = React.forwardRef<
     className,
     color,
     focusable = false,
-    'aria-label': ariaLabel = 'loading',
+    "aria-label": ariaLabel = "loading",
     ...props
   },
-  ref
+  ref,
 ) {
   return (
     <StyledActivityIndicator
@@ -33,6 +32,6 @@ const Spinner = React.forwardRef<
   );
 });
 
-Spinner.displayName = 'Spinner';
+Spinner.displayName = "Spinner";
 
 export { Spinner };

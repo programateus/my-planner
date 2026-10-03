@@ -67,7 +67,10 @@ export function DrawingCanvas() {
         <View
           collapsable={false}
           onLayout={viewport.onLayout}
-          style={[styles.workspace, { backgroundColor: dark ? "#14161B" : "#E9ECF1" }]}
+          style={[
+            styles.workspace,
+            { backgroundColor: dark ? "#14161B" : "#E9ECF1" },
+          ]}
         >
           <Canvas style={styles.container}>
             <Group transform={viewport.transform}>
@@ -78,7 +81,12 @@ export function DrawingCanvas() {
                     r={3}
                     color={dark ? "#25272D" : "#FFFFFF"}
                   >
-                    <Shadow dx={0} dy={4} blur={10} color={dark ? "#00000070" : "#18243A24"} />
+                    <Shadow
+                      dx={0}
+                      dy={4}
+                      blur={10}
+                      color={dark ? "#00000070" : "#18243A24"}
+                    />
                   </RoundedRect>
                   <Rect
                     {...getPageBounds(index)}
@@ -88,12 +96,17 @@ export function DrawingCanvas() {
                   />
                 </Group>
               ))}
-              {pictures && Array.from({ length: viewport.pageCount }, (_, index) => {
-                const template = templates[index];
-                return template ? (
-                  <PageTemplateLayer key={index} pageIndex={index} picture={pictures[template]} />
-                ) : null;
-              })}
+              {pictures &&
+                Array.from({ length: viewport.pageCount }, (_, index) => {
+                  const template = templates[index];
+                  return template ? (
+                    <PageTemplateLayer
+                      key={index}
+                      pageIndex={index}
+                      picture={pictures[template]}
+                    />
+                  ) : null;
+                })}
               <Group layer>
                 <CommittedStrokesLayer
                   strokes={document.getRenderedStrokes()}

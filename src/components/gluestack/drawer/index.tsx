@@ -1,13 +1,13 @@
-'use client';
-import { createModal as createDrawer } from '@gluestack-ui/core/modal/creator';
-import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
+"use client";
+import { createModal as createDrawer } from "@gluestack-ui/core/modal/creator";
+import type { VariantProps } from "@gluestack-ui/utils/nativewind-utils";
 import {
   tva,
   useStyleContext,
   withStyleContext,
-} from '@gluestack-ui/utils/nativewind-utils';
-import React from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+} from "@gluestack-ui/utils/nativewind-utils";
+import React from "react";
+import { Pressable, ScrollView, View } from "react-native";
 import Animated, {
   Easing,
   FadeIn,
@@ -20,9 +20,9 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
   SlideOutUp,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-const SCOPE = 'MODAL';
+const SCOPE = "MODAL";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -38,141 +38,141 @@ const UIDrawer = createDrawer({
 });
 
 const drawerStyle = tva({
-  base: 'w-full h-full web:pointer-events-none relative',
+  base: "w-full h-full web:pointer-events-none relative",
   variants: {
     size: {
-      sm: '',
-      md: '',
-      lg: '',
-      full: '',
+      sm: "",
+      md: "",
+      lg: "",
+      full: "",
     },
     anchor: {
-      left: 'items-start',
-      right: 'items-end',
-      top: 'justify-start',
-      bottom: 'justify-end',
+      left: "items-start",
+      right: "items-end",
+      top: "justify-start",
+      bottom: "justify-end",
     },
   },
 });
 
 const drawerBackdropStyle = tva({
-  base: 'absolute left-0 top-0 right-0 bottom-0 bg-[#000]/50 web:cursor-default',
+  base: "absolute left-0 top-0 right-0 bottom-0 bg-[#000]/50 web:cursor-default",
 });
 
 const drawerContentStyle = tva({
-  base: 'bg-background shadow-hard-5 p-6 absolute',
+  base: "bg-background shadow-hard-5 p-6 absolute",
   parentVariants: {
     size: {
-      sm: '',
-      md: '',
-      lg: '',
-      full: '',
+      sm: "",
+      md: "",
+      lg: "",
+      full: "",
     },
     anchor: {
-      left: 'h-full border-r border-border/80',
-      right: 'h-full border-l border-border/80',
-      top: 'w-full border-b border-border/80 rounded-b-xl',
-      bottom: 'w-full border-t border-border/80 rounded-t-xl',
+      left: "h-full border-r border-border/80",
+      right: "h-full border-l border-border/80",
+      top: "w-full border-b border-border/80 rounded-b-xl",
+      bottom: "w-full border-t border-border/80 rounded-t-xl",
     },
   },
   parentCompoundVariants: [
     {
-      size: 'sm',
-      anchor: 'left',
-      class: 'sm:w-1/4 w-2/5',
+      size: "sm",
+      anchor: "left",
+      class: "sm:w-1/4 w-2/5",
     },
     {
-      size: 'sm',
-      anchor: 'right',
-      class: 'sm:w-1/4 w-2/5',
+      size: "sm",
+      anchor: "right",
+      class: "sm:w-1/4 w-2/5",
     },
     {
-      size: 'sm',
-      anchor: 'top',
-      class: 'h-1/4',
+      size: "sm",
+      anchor: "top",
+      class: "h-1/4",
     },
     {
-      size: 'sm',
-      anchor: 'bottom',
-      class: 'h-1/4',
+      size: "sm",
+      anchor: "bottom",
+      class: "h-1/4",
     },
     {
-      size: 'md',
-      anchor: 'left',
-      class: 'w-1/2',
+      size: "md",
+      anchor: "left",
+      class: "w-1/2",
     },
     {
-      size: 'md',
-      anchor: 'right',
-      class: 'w-1/2',
+      size: "md",
+      anchor: "right",
+      class: "w-1/2",
     },
     {
-      size: 'md',
-      anchor: 'top',
-      class: 'h-1/2',
+      size: "md",
+      anchor: "top",
+      class: "h-1/2",
     },
     {
-      size: 'md',
-      anchor: 'bottom',
-      class: 'h-1/2',
+      size: "md",
+      anchor: "bottom",
+      class: "h-1/2",
     },
     {
-      size: 'lg',
-      anchor: 'left',
-      class: 'w-3/4',
+      size: "lg",
+      anchor: "left",
+      class: "w-3/4",
     },
     {
-      size: 'lg',
-      anchor: 'right',
-      class: 'w-3/4',
+      size: "lg",
+      anchor: "right",
+      class: "w-3/4",
     },
     {
-      size: 'lg',
-      anchor: 'top',
-      class: 'h-3/4',
+      size: "lg",
+      anchor: "top",
+      class: "h-3/4",
     },
     {
-      size: 'lg',
-      anchor: 'bottom',
-      class: 'h-3/4',
+      size: "lg",
+      anchor: "bottom",
+      class: "h-3/4",
     },
     {
-      size: 'full',
-      anchor: 'left',
-      class: 'w-full',
+      size: "full",
+      anchor: "left",
+      class: "w-full",
     },
     {
-      size: 'full',
-      anchor: 'right',
-      class: 'w-full',
+      size: "full",
+      anchor: "right",
+      class: "w-full",
     },
     {
-      size: 'full',
-      anchor: 'top',
-      class: 'h-full',
+      size: "full",
+      anchor: "top",
+      class: "h-full",
     },
     {
-      size: 'full',
-      anchor: 'bottom',
-      class: 'h-full',
+      size: "full",
+      anchor: "bottom",
+      class: "h-full",
     },
   ],
 });
 
 const drawerCloseButtonStyle = tva({
-  base: 'z-10 rounded-sm p-2 data-[focus-visible=true]:bg-accent web:cursor-pointer web:outline-0 data-[hover=true]:bg-accent/50',
+  base: "z-10 rounded-sm p-2 data-[focus-visible=true]:bg-accent web:cursor-pointer web:outline-0 data-[hover=true]:bg-accent/50",
 });
 
 const drawerHeaderStyle = tva({
-  base: 'justify-between items-center flex-row pb-4',
+  base: "justify-between items-center flex-row pb-4",
 });
 
 const drawerBodyStyle = tva({
-  base: 'mt-4 mb-6 shrink-0',
+  base: "mt-4 mb-6 shrink-0",
 });
 
 const drawerFooterStyle = tva({
-  base: 'flex-col-reverse gap-2 sm:flex-row sm:justify-end pt-4',
+  base: "flex-col-reverse gap-2 sm:flex-row sm:justify-end pt-4",
 });
 
 type IDrawerProps = React.ComponentProps<typeof UIDrawer> &
@@ -201,7 +201,7 @@ type IDrawerCloseButtonProps = React.ComponentProps<
 const Drawer = React.forwardRef<
   React.ComponentRef<typeof UIDrawer>,
   IDrawerProps
->(function Drawer({ className, size = 'md', anchor = 'left', ...props }, ref) {
+>(function Drawer({ className, size = "md", anchor = "left", ...props }, ref) {
   return (
     <UIDrawer
       ref={ref}
@@ -238,26 +238,26 @@ const DrawerContent = React.forwardRef<
 
   // Calculate positioning classes
   const customClass =
-    parentAnchor === 'left' || parentAnchor === 'right'
-      ? `top-0 ${parentAnchor === 'left' ? 'left-0' : 'right-0'}`
-      : `left-0 ${parentAnchor === 'top' ? 'top-0' : 'bottom-0'}`;
+    parentAnchor === "left" || parentAnchor === "right"
+      ? `top-0 ${parentAnchor === "left" ? "left-0" : "right-0"}`
+      : `left-0 ${parentAnchor === "top" ? "top-0" : "bottom-0"}`;
 
   // Select entering and exiting animations based on anchor
   const enteringAnimation =
-    parentAnchor === 'left'
+    parentAnchor === "left"
       ? SlideInLeft.duration(200).easing(Easing.in(Easing.cubic))
-      : parentAnchor === 'right'
+      : parentAnchor === "right"
         ? SlideInRight.duration(200)
-        : parentAnchor === 'top'
+        : parentAnchor === "top"
           ? SlideInUp.duration(200)
           : SlideInDown.duration(200);
 
   const exitingAnimation =
-    parentAnchor === 'left'
+    parentAnchor === "left"
       ? SlideOutLeft.duration(200)
-      : parentAnchor === 'right'
+      : parentAnchor === "right"
         ? SlideOutRight.duration(200)
-        : parentAnchor === 'top'
+        : parentAnchor === "top"
           ? SlideOutUp.duration(200)
           : SlideOutDown.duration(200);
 
@@ -272,7 +272,7 @@ const DrawerContent = React.forwardRef<
           size: parentSize,
           anchor: parentAnchor,
         },
-        class: `${className || ''} ${customClass}`,
+        class: `${className || ""} ${customClass}`,
       })}
       pointerEvents="auto"
     />
@@ -339,13 +339,13 @@ const DrawerCloseButton = React.forwardRef<
   );
 });
 
-Drawer.displayName = 'Drawer';
-DrawerBackdrop.displayName = 'DrawerBackdrop';
-DrawerContent.displayName = 'DrawerContent';
-DrawerHeader.displayName = 'DrawerHeader';
-DrawerBody.displayName = 'DrawerBody';
-DrawerFooter.displayName = 'DrawerFooter';
-DrawerCloseButton.displayName = 'DrawerCloseButton';
+Drawer.displayName = "Drawer";
+DrawerBackdrop.displayName = "DrawerBackdrop";
+DrawerContent.displayName = "DrawerContent";
+DrawerHeader.displayName = "DrawerHeader";
+DrawerBody.displayName = "DrawerBody";
+DrawerFooter.displayName = "DrawerFooter";
+DrawerCloseButton.displayName = "DrawerCloseButton";
 
 export {
   Drawer,
@@ -354,5 +354,5 @@ export {
   DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader
+  DrawerHeader,
 };

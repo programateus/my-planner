@@ -3,11 +3,11 @@
 Catálogo completo: 59 módulos, incluindo o provider. Importe diretamente do módulo utilizado para evitar carregar o catálogo inteiro na inicialização do aplicativo.
 
 ```tsx
-import { Button, ButtonText } from '@/components/ui/button';
+import { Button, ButtonText } from "@/components/ui/button";
 
-<Button onPress={() => console.log('Salvar')}>
+<Button onPress={() => console.log("Salvar")}>
   <ButtonText>Salvar</ButtonText>
-</Button>
+</Button>;
 ```
 
 - `accordion`

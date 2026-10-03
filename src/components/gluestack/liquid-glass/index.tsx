@@ -1,20 +1,20 @@
-import { tva } from '@gluestack-ui/utils/nativewind-utils';
+import { tva } from "@gluestack-ui/utils/nativewind-utils";
 import {
   GlassContainer as ExpoGlassContainer,
   GlassView as ExpoGlassView,
   type GlassContainerProps,
-  type GlassViewProps
-} from 'expo-glass-effect';
-import { withUniwind } from 'uniwind';
-import React from 'react';
-import { Platform, View } from 'react-native';
+  type GlassViewProps,
+} from "expo-glass-effect";
+import { withUniwind } from "uniwind";
+import React from "react";
+import { Platform, View } from "react-native";
 
 const glassViewStyle = tva({
-  base: 'overflow-hidden',
+  base: "overflow-hidden",
 });
 
 const glassContainerStyle = tva({
-  base: 'overflow-hidden',
+  base: "overflow-hidden",
 });
 
 type IGlassViewProps = GlassViewProps & {
@@ -32,8 +32,16 @@ export const GlassView = React.forwardRef<
   React.ComponentRef<typeof ExpoGlassView>,
   IGlassViewProps
 >(function GlassView({ className, ...props }, ref) {
-  return (
-    Platform.OS === 'web' ? <View ref={ref} {...props} className={glassViewStyle({ className: `overflow-hidden bg-background/40 backdrop-blur-md ${className ?? ""}`, })} /> : <StyledExpoGlassView
+  return Platform.OS === "web" ? (
+    <View
+      ref={ref}
+      {...props}
+      className={glassViewStyle({
+        className: `overflow-hidden bg-background/40 backdrop-blur-md ${className ?? ""}`,
+      })}
+    />
+  ) : (
+    <StyledExpoGlassView
       ref={ref}
       {...props}
       className={glassViewStyle({ className })}
@@ -41,14 +49,22 @@ export const GlassView = React.forwardRef<
   );
 });
 
-GlassView.displayName = 'GlassView';
+GlassView.displayName = "GlassView";
 
 export const GlassContainer = React.forwardRef<
   React.ComponentRef<typeof ExpoGlassContainer>,
   IGlassContainerProps
 >(function GlassContainer({ className, ...props }, ref) {
-  return (
-    Platform.OS === 'web' ? <View ref={ref} {...props} className={glassContainerStyle({ className: `overflow-hidden bg-background/0 backdrop-blur-md ${className ?? ""}`, })} /> : <StyledExpoGlassContainer
+  return Platform.OS === "web" ? (
+    <View
+      ref={ref}
+      {...props}
+      className={glassContainerStyle({
+        className: `overflow-hidden bg-background/0 backdrop-blur-md ${className ?? ""}`,
+      })}
+    />
+  ) : (
+    <StyledExpoGlassContainer
       ref={ref}
       {...props}
       // @ts-ignore - className support via styled()
@@ -57,12 +73,15 @@ export const GlassContainer = React.forwardRef<
   );
 });
 
-GlassContainer.displayName = 'GlassContainer';
+GlassContainer.displayName = "GlassContainer";
 
-export { isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect';
+export {
+  isGlassEffectAPIAvailable,
+  isLiquidGlassAvailable,
+} from "expo-glass-effect";
 export type {
   GlassColorScheme,
   GlassContainerProps,
   GlassStyle,
-  GlassViewProps
-} from 'expo-glass-effect';
+  GlassViewProps,
+} from "expo-glass-effect";

@@ -1,7 +1,13 @@
 import { router, useNavigation } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
 import { ArrowLeft, Save } from "lucide-react-native";
-import { useCallback, useEffect, useLayoutEffect, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { ActivityIndicator, AppState } from "react-native";
 
 import { Box } from "@/components/gluestack/box";
@@ -24,52 +30,113 @@ function goBack() {
 }
 
 async function readFile(id: string) {
-  const [entry, data] = await Promise.all([libraryRepository.getEntry(id), libraryRepository.loadDocument(id)]);
+  const [entry, data] = await Promise.all([
+    libraryRepository.getEntry(id),
+    libraryRepository.loadDocument(id),
+  ]);
   if (entry?.kind !== "file") throw new Error("Arquivo não encontrado.");
   return { entry, data };
 }
 
 export function FileScreen({ id }: { id: string }) {
-  const [loaded, setLoaded] = useState<{ entry: LibraryEntry; data: DocumentData } | null>(null);
+  const [loaded, setLoaded] = useState<{
+    entry: LibraryEntry;
+    data: DocumentData;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let active = true;
     void readFile(id).then(
-      (value) => { if (active) setLoaded(value); },
-      (cause) => { if (active) setError(cause instanceof Error ? cause.message : "Não foi possível abrir o arquivo."); },
+      (value) => {
+        if (active) setLoaded(value);
+      },
+      (cause) => {
+        if (active)
+          setError(
+            cause instanceof Error
+              ? cause.message
+              : "Não foi possível abrir o arquivo.",
+          );
+      },
     );
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [id, attempt]);
 
   if (loaded) return <FileEditor entry={loaded.entry} data={loaded.data} />;
-  return <Box className="flex-1 bg-background"><SafeAreaView style={{ flex: 1 }}>
-    <Button variant="ghost" className="self-start m-3 min-h-12" onPress={goBack}>
-      <ButtonIcon as={ArrowLeft} /><ButtonText>Meus arquivos</ButtonText>
-    </Button>
-    {error ? <Box className="p-6 items-center gap-4">
-      <Text className="text-destructive text-center">{error}</Text>
-      <Button variant="outline" onPress={() => { setError(null); setAttempt((value) => value + 1); }}><ButtonText>Tentar novamente</ButtonText></Button>
-    </Box> : <ActivityIndicator style={{ marginTop: 48 }} accessibilityLabel="Abrindo desenho" />}
-  </SafeAreaView></Box>;
+  return (
+    <Box className="flex-1 bg-background">
+      <SafeAreaView style={{ flex: 1 }}>
+        <Button
+          variant="ghost"
+          className="self-start m-3 min-h-12"
+          onPress={goBack}
+        >
+          <ButtonIcon as={ArrowLeft} />
+          <ButtonText>Meus arquivos</ButtonText>
+        </Button>
+        {error ? (
+          <Box className="p-6 items-center gap-4">
+            <Text className="text-destructive text-center">{error}</Text>
+            <Button
+              variant="outline"
+              onPress={() => {
+                setError(null);
+                setAttempt((value) => value + 1);
+              }}
+            >
+              <ButtonText>Tentar novamente</ButtonText>
+            </Button>
+          </Box>
+        ) : (
+          <ActivityIndicator
+            style={{ marginTop: 48 }}
+            accessibilityLabel="Abrindo desenho"
+          />
+        )}
+      </SafeAreaView>
+    </Box>
+  );
 }
 
-function FileEditor({ entry, data }: { entry: LibraryEntry; data: DocumentData }) {
+function FileEditor({
+  entry,
+  data,
+}: {
+  entry: LibraryEntry;
+  data: DocumentData;
+}) {
   const [document] = useState(() => new SkiaCanvasDocument(data));
-  const [saver] = useState(() => new DocumentSaver((snapshot) => libraryRepository.saveDocument(entry.id, snapshot)));
-  const status = useSyncExternalStore(saver.subscribe, saver.getStatus, saver.getStatus);
+  const [saver] = useState(
+    () =>
+      new DocumentSaver((snapshot) =>
+        libraryRepository.saveDocument(entry.id, snapshot),
+      ),
+  );
+  const status = useSyncExternalStore(
+    saver.subscribe,
+    saver.getStatus,
+    saver.getStatus,
+  );
   const [saveError, setSaveError] = useState<string | null>(null);
   const navigation = useNavigation();
   const toast = useToast();
 
   const flush = useCallback(async () => {
     setSaveError(null);
-    try { await saver.flush(); return true; }
-    catch { setSaveError("Não foi possível salvar. Tente novamente antes de sair."); return false; }
+    try {
+      await saver.flush();
+      return true;
+    } catch {
+      setSaveError("Não foi possível salvar. Tente novamente antes de sair.");
+      return false;
+    }
   }, [saver]);
 
   const handleSave = async () => {
-    if (!await flush()) return;
+    if (!(await flush())) return;
     const toastId = `file-saved-${entry.id}`;
     if (toast.isActive(toastId)) return;
     toast.show({
@@ -85,10 +152,15 @@ function FileEditor({ entry, data }: { entry: LibraryEntry; data: DocumentData }
   };
 
   usePreventRemove(status !== "saved", ({ data: actionData }) => {
-    void flush().then((success) => { if (success) navigation.dispatch(actionData.action); });
+    void flush().then((success) => {
+      if (success) navigation.dispatch(actionData.action);
+    });
   });
 
-  useLayoutEffect(() => document.subscribe(() => saver.save(document.snapshot())), [document, saver]);
+  useLayoutEffect(
+    () => document.subscribe(() => saver.save(document.snapshot())),
+    [document, saver],
+  );
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (state) => {
@@ -101,7 +173,11 @@ function FileEditor({ entry, data }: { entry: LibraryEntry; data: DocumentData }
   }, [saver]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || typeof window.addEventListener !== "function") return;
+    if (
+      typeof window === "undefined" ||
+      typeof window.addEventListener !== "function"
+    )
+      return;
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (saver.getStatus() === "saved") return;
       event.preventDefault();
@@ -111,24 +187,62 @@ function FileEditor({ entry, data }: { entry: LibraryEntry; data: DocumentData }
     return () => window.removeEventListener("beforeunload", beforeUnload);
   }, [saver]);
 
-  return <DrawingProvider document={document}>
-    <Box className="flex-1 bg-background"><SafeAreaView style={{ flex: 1 }}>
-      <Box className="flex-row items-center gap-2 px-3 py-2 border-b border-border">
-        <Button variant="ghost" className="min-h-12 min-w-12 px-2" accessibilityLabel="Salvar e voltar aos arquivos"
-          onPress={() => { void flush().then((success) => { if (success) goBack(); }); }}><ButtonIcon as={ArrowLeft} /></Button>
-        <Box className="flex-1 gap-1">
-          <Text className="font-semibold text-foreground" numberOfLines={1}>{entry.name}</Text>
-          <Text className={`text-xs ${status === "error" ? "text-destructive" : "text-muted-foreground"}`} accessibilityLiveRegion="polite">
-            {status === "saved" ? "Salvo neste dispositivo" : status === "saving" ? "Salvando…" : "Falha ao salvar"}
-          </Text>
-        </Box>
-        <Button variant="outline" className="min-h-12" isDisabled={status === "saving"} onPress={() => void handleSave()}>
-          <ButtonIcon as={Save} /><ButtonText>{status === "error" ? "Tentar salvar" : "Salvar"}</ButtonText>
-        </Button>
+  return (
+    <DrawingProvider document={document}>
+      <Box className="flex-1 bg-background">
+        <SafeAreaView style={{ flex: 1 }}>
+          <Box className="flex-row items-center gap-2 px-3 py-2 border-b border-border">
+            <Button
+              variant="ghost"
+              className="min-h-12 min-w-12 px-2"
+              accessibilityLabel="Salvar e voltar aos arquivos"
+              onPress={() => {
+                void flush().then((success) => {
+                  if (success) goBack();
+                });
+              }}
+            >
+              <ButtonIcon as={ArrowLeft} />
+            </Button>
+            <Box className="flex-1 gap-1">
+              <Text className="font-semibold text-foreground" numberOfLines={1}>
+                {entry.name}
+              </Text>
+              <Text
+                className={`text-xs ${status === "error" ? "text-destructive" : "text-muted-foreground"}`}
+                accessibilityLiveRegion="polite"
+              >
+                {status === "saved"
+                  ? "Salvo neste dispositivo"
+                  : status === "saving"
+                    ? "Salvando…"
+                    : "Falha ao salvar"}
+              </Text>
+            </Box>
+            <Button
+              variant="outline"
+              className="min-h-12"
+              isDisabled={status === "saving"}
+              onPress={() => void handleSave()}
+            >
+              <ButtonIcon as={Save} />
+              <ButtonText>
+                {status === "error" ? "Tentar salvar" : "Salvar"}
+              </ButtonText>
+            </Button>
+          </Box>
+          {saveError && (
+            <Text
+              className="text-destructive px-4 py-2"
+              accessibilityLiveRegion="polite"
+            >
+              {saveError}
+            </Text>
+          )}
+          <Toolbar />
+          <DrawingCanvas />
+        </SafeAreaView>
       </Box>
-      {saveError && <Text className="text-destructive px-4 py-2" accessibilityLiveRegion="polite">{saveError}</Text>}
-      <Toolbar />
-      <DrawingCanvas />
-    </SafeAreaView></Box>
-  </DrawingProvider>;
+    </DrawingProvider>
+  );
 }

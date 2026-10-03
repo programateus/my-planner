@@ -1,25 +1,25 @@
-'use client';
-import React from 'react';
-import { View, ViewProps, Text } from 'react-native';
-import { tva } from '@gluestack-ui/utils/nativewind-utils';
-import { ChatMessage as ChatMessageType } from './types';
+"use client";
+import React from "react";
+import { View, ViewProps, Text } from "react-native";
+import { tva } from "@gluestack-ui/utils/nativewind-utils";
+import { ChatMessage as ChatMessageType } from "./types";
 
 const messageContainerStyle = tva({
-  base: 'p-3 my-1 rounded-lg max-w-[80%]',
+  base: "p-3 my-1 rounded-lg max-w-[80%]",
   variants: {
     role: {
-      user: 'bg-primary self-end',
-      assistant: 'bg-muted self-start',
+      user: "bg-primary self-end",
+      assistant: "bg-muted self-start",
     },
   },
 });
 
 const messageTextStyle = tva({
-  base: 'text-sm',
+  base: "text-sm",
   variants: {
     role: {
-      user: 'text-primary-foreground',
-      assistant: 'text-foreground',
+      user: "text-primary-foreground",
+      assistant: "text-foreground",
     },
   },
 });
@@ -54,4 +54,4 @@ export const ChatMessage = React.forwardRef<
   );
 });
 
-ChatMessage.displayName = 'ChatMessage';
+ChatMessage.displayName = "ChatMessage";

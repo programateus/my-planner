@@ -1,32 +1,36 @@
-'use client';
-import { createProgress } from '@gluestack-ui/core/progress/creator';
-import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
-import { tva, useStyleContext, withStyleContext } from '@gluestack-ui/utils/nativewind-utils';
-import React from 'react';
-import { View } from 'react-native';
+"use client";
+import { createProgress } from "@gluestack-ui/core/progress/creator";
+import type { VariantProps } from "@gluestack-ui/utils/nativewind-utils";
+import {
+  tva,
+  useStyleContext,
+  withStyleContext,
+} from "@gluestack-ui/utils/nativewind-utils";
+import React from "react";
+import { View } from "react-native";
 
-const SCOPE = 'PROGRESS';
+const SCOPE = "PROGRESS";
 export const UIProgress = createProgress({
   Root: withStyleContext(View, SCOPE),
   FilledTrack: View,
 });
 
 const progressStyle = tva({
-  base: 'bg-primary/20 relative h-2 w-full overflow-hidden rounded-full',
+  base: "bg-primary/20 relative h-2 w-full overflow-hidden rounded-full",
   variants: {
     orientation: {
-      horizontal: 'w-full h-2',
-      vertical: 'h-full w-2 justify-end',
+      horizontal: "w-full h-2",
+      vertical: "h-full w-2 justify-end",
     },
   },
 });
 
 const progressFilledTrackStyle = tva({
-  base: 'bg-primary  transition-all',
+  base: "bg-primary  transition-all",
   variants: {
     orientation: {
-      horizontal: 'h-full',
-      vertical: 'w-full',
+      horizontal: "h-full",
+      vertical: "w-full",
     },
   },
 });
@@ -39,10 +43,7 @@ type IProgressFilledTrackProps = VariantProps<typeof progressFilledTrackStyle> &
 const Progress = React.forwardRef<
   React.ComponentRef<typeof UIProgress>,
   IProgressProps
->(function Progress(
-  { className, orientation = 'horizontal', ...props },
-  ref
-) {
+>(function Progress({ className, orientation = "horizontal", ...props }, ref) {
   return (
     <UIProgress
       ref={ref}

@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { ChatMessage } from './types';
+import { useState, useCallback } from "react";
+import { ChatMessage } from "./types";
 
 interface UseChatOptions {
   api: string;
@@ -13,7 +13,7 @@ interface UseChatReturn {
   error: Error | null;
   reset: () => void;
   setMessages: (messages: ChatMessage[]) => void;
-  status: 'idle' | 'loading' | 'error';
+  status: "idle" | "loading" | "error";
 }
 
 export function useChat(options: UseChatOptions): UseChatReturn {
@@ -21,7 +21,7 @@ export function useChat(options: UseChatOptions): UseChatReturn {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
 
   const generateId = () =>
     `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -32,11 +32,11 @@ export function useChat(options: UseChatOptions): UseChatReturn {
 
       setLoading(true);
       setError(null);
-      setStatus('loading');
+      setStatus("loading");
 
       const userMessage: ChatMessage = {
         id: generateId(),
-        role: 'user',
+        role: "user",
         content: input,
         timestamp: Date.now(),
       };
@@ -45,9 +45,9 @@ export function useChat(options: UseChatOptions): UseChatReturn {
 
       try {
         const response = await fetch(api, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             message: input,
@@ -63,28 +63,28 @@ export function useChat(options: UseChatOptions): UseChatReturn {
 
         const assistantMessage: ChatMessage = {
           id: generateId(),
-          role: 'assistant',
-          content: data.message || data.content || 'OK',
+          role: "assistant",
+          content: data.message || data.content || "OK",
           timestamp: Date.now(),
         };
 
         setMessages((prev) => [...prev, assistantMessage]);
-        setStatus('idle');
+        setStatus("idle");
       } catch (err) {
-        const error = err instanceof Error ? err : new Error('Unknown error');
+        const error = err instanceof Error ? err : new Error("Unknown error");
         setError(error);
-        setStatus('error');
+        setStatus("error");
       } finally {
         setLoading(false);
       }
     },
-    [api, messages]
+    [api, messages],
   );
 
   const reset = useCallback(() => {
     setMessages(initialMessages);
     setError(null);
-    setStatus('idle');
+    setStatus("idle");
     setLoading(false);
   }, [initialMessages]);
 

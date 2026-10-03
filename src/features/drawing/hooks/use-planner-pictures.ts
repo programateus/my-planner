@@ -10,11 +10,14 @@ export function usePlannerPictures(dark: boolean) {
   const [error, setError] = useState<Error | null>(null);
   const typeface = useTypeface(require("@/assets/fonts/Karla.ttf"), setError);
   const pictures = useMemo<PlannerPictures | null>(
-    () => typeface ? {
-      daily: createPlannerPicture("daily", typeface, dark),
-      weekly: createPlannerPicture("weekly", typeface, dark),
-      monthly: createPlannerPicture("monthly", typeface, dark),
-    } : null,
+    () =>
+      typeface
+        ? {
+            daily: createPlannerPicture("daily", typeface, dark),
+            weekly: createPlannerPicture("weekly", typeface, dark),
+            monthly: createPlannerPicture("monthly", typeface, dark),
+          }
+        : null,
     [dark, typeface],
   );
 

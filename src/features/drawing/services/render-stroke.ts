@@ -1,7 +1,10 @@
 import { Skia, type SkPaint, type SkPath } from "@shopify/react-native-skia";
 
 import type { Stroke } from "@/features/drawing/domain/entities/stroke";
-import { appendSmoothedPoint, appendStrokeSegment } from "@/features/drawing/geometry/stroke-smoothing";
+import {
+  appendSmoothedPoint,
+  appendStrokeSegment,
+} from "@/features/drawing/geometry/stroke-smoothing";
 import { createStrokePaint } from "@/features/drawing/services/create-stroke-paint";
 
 export type RenderedStroke = Stroke & { path: SkPath; paint: SkPaint };
@@ -17,5 +20,9 @@ export function renderStroke(stroke: Stroke): RenderedStroke {
     }
     appendStrokeSegment(builder, geometry.cursor, geometry.lastPoint);
   }
-  return { ...stroke, path: builder.detach(), paint: createStrokePaint(stroke.style) };
+  return {
+    ...stroke,
+    path: builder.detach(),
+    paint: createStrokePaint(stroke.style),
+  };
 }

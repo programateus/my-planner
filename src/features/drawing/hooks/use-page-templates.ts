@@ -10,12 +10,17 @@ export function usePageTemplates() {
     (listener: () => void) => document.subscribePageTemplates(listener),
     [document],
   );
-  const getSnapshot = useCallback(() => document.getPageTemplates(), [document]);
+  const getSnapshot = useCallback(
+    () => document.getPageTemplates(),
+    [document],
+  );
   const templates = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   const applyTemplate = useCallback(
     (pageIndex: number, template: PlannerTemplateId | null) => {
       if ((document.getPageTemplates()[pageIndex] ?? null) === template) return;
-      history.execute(new SetPageTemplateCommand(document, pageIndex, template));
+      history.execute(
+        new SetPageTemplateCommand(document, pageIndex, template),
+      );
     },
     [document, history],
   );

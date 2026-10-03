@@ -1,12 +1,16 @@
-'use client';
-import { createSlider } from '@gluestack-ui/core/slider/creator';
-import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
-import { tva, useStyleContext, withStyleContext } from '@gluestack-ui/utils/nativewind-utils';
-import { withUniwind } from 'uniwind';
-import React from 'react';
-import { Pressable, View } from 'react-native';
+"use client";
+import { createSlider } from "@gluestack-ui/core/slider/creator";
+import type { VariantProps } from "@gluestack-ui/utils/nativewind-utils";
+import {
+  tva,
+  useStyleContext,
+  withStyleContext,
+} from "@gluestack-ui/utils/nativewind-utils";
+import { withUniwind } from "uniwind";
+import React from "react";
+import { Pressable, View } from "react-native";
 
-const SCOPE = 'SLIDER';
+const SCOPE = "SLIDER";
 const Root = withStyleContext(View, SCOPE);
 export const UISlider = createSlider({
   Root: Root,
@@ -17,55 +21,55 @@ export const UISlider = createSlider({
 });
 const StyledTrack = withUniwind(UISlider.Track);
 const sliderStyle = tva({
-  base: 'justify-center items-center data-[disabled=true]:opacity-40 data-[disabled=true]:web:pointer-events-none',
+  base: "justify-center items-center data-[disabled=true]:opacity-40 data-[disabled=true]:web:pointer-events-none",
   variants: {
     orientation: {
-      horizontal: 'w-full',
-      vertical: 'h-full',
+      horizontal: "w-full",
+      vertical: "h-full",
     },
     isReversed: {
-      true: '',
-      false: '',
+      true: "",
+      false: "",
     },
   },
 });
 
 const sliderThumbStyle = tva({
-  base: 'bg-white border border-primary ring-ring/50 absolute rounded-full shadow-sm transition-[color,box-shadow] data-[hover=true]:ring-4 data-[focus-visible=true]:ring-4 data-[focus-visible=true]:outline-hidden disabled:pointer-events-none disabled:opacity-50 web:cursor-pointer h-4 w-4',
+  base: "bg-white border border-primary ring-ring/50 absolute rounded-full shadow-sm transition-[color,box-shadow] data-[hover=true]:ring-4 data-[focus-visible=true]:ring-4 data-[focus-visible=true]:outline-hidden disabled:pointer-events-none disabled:opacity-50 web:cursor-pointer h-4 w-4",
 });
 
 const sliderTrackStyle = tva({
-  base: 'bg-muted rounded-full overflow-hidden',
+  base: "bg-muted rounded-full overflow-hidden",
   parentVariants: {
     orientation: {
-      horizontal: 'w-full h-1.5 flex-row',
-      vertical: 'h-full w-1.5 flex-col-reverse',
+      horizontal: "w-full h-1.5 flex-row",
+      vertical: "h-full w-1.5 flex-col-reverse",
     },
     isReversed: {
-      true: '',
-      false: '',
+      true: "",
+      false: "",
     },
   },
   parentCompoundVariants: [
     {
-      orientation: 'horizontal',
+      orientation: "horizontal",
       isReversed: true,
-      class: 'flex-row-reverse',
+      class: "flex-row-reverse",
     },
     {
-      orientation: 'vertical',
+      orientation: "vertical",
       isReversed: true,
-      class: 'flex-col',
+      class: "flex-col",
     },
   ],
 });
 
 const sliderFilledTrackStyle = tva({
-  base: 'bg-primary',
+  base: "bg-primary",
   parentVariants: {
     orientation: {
-      horizontal: 'h-full',
-      vertical: 'w-full',
+      horizontal: "h-full",
+      vertical: "w-full",
     },
   },
 });
@@ -77,13 +81,8 @@ const Slider = React.forwardRef<
   React.ComponentRef<typeof UISlider>,
   ISliderProps
 >(function Slider(
-  {
-    className,
-    orientation = 'horizontal',
-    isReversed = false,
-    ...props
-  },
-  ref
+  { className, orientation = "horizontal", isReversed = false, ...props },
+  ref,
 ) {
   return (
     <UISlider
@@ -126,10 +125,7 @@ const SliderTrack = React.forwardRef<
   React.ComponentRef<typeof UISlider.Track>,
   ISliderTrackProps
 >(function SliderTrack({ className, ...props }, ref) {
-  const {
-    orientation: parentOrientation,
-    isReversed,
-  } = useStyleContext(SCOPE);
+  const { orientation: parentOrientation, isReversed } = useStyleContext(SCOPE);
 
   return (
     <StyledTrack

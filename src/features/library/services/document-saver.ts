@@ -14,7 +14,9 @@ export class DocumentSaver {
 
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
-    return () => { this.listeners.delete(listener); };
+    return () => {
+      this.listeners.delete(listener);
+    };
   };
 
   save(data: DocumentData): void {
@@ -32,16 +34,20 @@ export class DocumentSaver {
     if (!this.pending) return;
     this.setStatus("saving");
     this.running = this.drain();
-    try { await this.running; }
-    finally { this.running = null; }
+    try {
+      await this.running;
+    } finally {
+      this.running = null;
+    }
   }
 
   private async drain() {
     while (this.pending) {
       const data = this.pending;
       this.pending = null;
-      try { await this.write(data); }
-      catch (error) {
+      try {
+        await this.write(data);
+      } catch (error) {
         this.pending ??= data;
         this.setStatus("error");
         throw error;

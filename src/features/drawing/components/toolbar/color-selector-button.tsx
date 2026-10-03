@@ -54,7 +54,9 @@ export const ColorSelectorButton = () => {
           variant="outline"
           className="min-h-12"
           accessibilityLabel={
-            isHighlighting ? "Alterar cor do marca-texto" : "Alterar cor do traço"
+            isHighlighting
+              ? "Alterar cor do marca-texto"
+              : "Alterar cor do traço"
           }
         >
           <Box
@@ -68,7 +70,9 @@ export const ColorSelectorButton = () => {
       <PopoverBackdrop />
       <PopoverContent
         className="w-auto gap-2 p-3"
-        accessibilityLabel={isHighlighting ? "Cores do marca-texto" : "Cores do traço"}
+        accessibilityLabel={
+          isHighlighting ? "Cores do marca-texto" : "Cores do traço"
+        }
       >
         {colorRows.map((row, rowIndex) => (
           <Box key={rowIndex} className="flex-row gap-2">
@@ -95,7 +99,9 @@ export const ColorSelectorButton = () => {
                     className="text-xl font-bold"
                     style={{
                       color:
-                        isHighlighting || value === "#FAFAFA" || value === "#EAB308"
+                        isHighlighting ||
+                        value === "#FAFAFA" ||
+                        value === "#EAB308"
                           ? "#0A0A0A"
                           : "#FFFFFF",
                     }}
