@@ -37,11 +37,11 @@ export function useViewportGesture(activeStrokePage: SharedValue<number>) {
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(VIEWPORT_PADDING);
-  const rawY = useSharedValue(VIEWPORT_PADDING);
   const pinching = useSharedValue(false);
   const panning = useSharedValue(false);
-  const canAppend = useSharedValue(false);
-  const pinchStart = useSharedValue({ scale: 1, x: 0, y: 0 });
+  const panSucceeded = useSharedValue(false);
+  const dragY = useSharedValue(0);
+  const pinchStartScale = useSharedValue(1);
 
   const transform = useDerivedValue(() => [
     { translateX: translateX.get() }, { translateY: translateY.get() }, { scale: scale.get() },
@@ -74,6 +74,22 @@ export function useViewportGesture(activeStrokePage: SharedValue<number>) {
   }, [scale, translateX, translateY]);
 
   const gesture = useMemo(() => {
+    const finishGesture = () => {
+      "worklet";
+      if (panning.get() || pinching.get()) return;
+      if (activeStrokePage.get() === -1) {
+        if (panSucceeded.get() && shouldAppendPage(
+          translateY.get(), getBottomLimit(size.get().height, scale.get(), pages.get()), dragY.get(),
+        )) {
+          const count = pages.get() + 1;
+          pages.set(count);
+          scheduleOnRN(setPageCount, count);
+        }
+        settle();
+      }
+      panSucceeded.set(false);
+    };
+
     const pan = Gesture.Pan()
       .minDistance(4)
       .averageTouches(true)
@@ -83,72 +99,60 @@ export function useViewportGesture(activeStrokePage: SharedValue<number>) {
         if (event.pointerType === PointerType.STYLUS || activeStrokePage.get() !== -1) return;
         panning.set(true);
         stopAnimation();
-        rawY.set(translateY.get());
-        canAppend.set(event.numberOfPointers === 1);
+        dragY.set(0);
+        panSucceeded.set(false);
       })
       .onChange((event) => {
         if (!panning.get() || event.pointerType === PointerType.STYLUS || activeStrokePage.get() !== -1) return;
-        if (pinching.get() || event.numberOfPointers > 1) {
-          canAppend.set(false);
-          rawY.set(translateY.get());
-          return;
-        }
         const bottom = getBottomLimit(size.get().height, scale.get(), pages.get());
         const top = getTopLimit(size.get().height, scale.get());
-        rawY.set(clamp(rawY.get() + event.changeY, bottom - MAX_OVERSCROLL, top + MAX_OVERSCROLL));
+        const nextY = clamp(translateY.get() + event.changeY, bottom - MAX_OVERSCROLL, top + MAX_OVERSCROLL);
         const offset = constrainOffset(
-          { x: translateX.get() + event.changeX, y: rawY.get() }, size.get(), scale.get(), pages.get(),
+          { x: translateX.get() + event.changeX, y: nextY }, size.get(), scale.get(), pages.get(),
         );
         translateX.set(offset.x);
-        translateY.set(rawY.get());
+        translateY.set(nextY);
+        dragY.set(event.translationY);
       })
       .onEnd((event, success) => {
-        if (!success || !panning.get() || activeStrokePage.get() !== -1 || pinching.get()) return;
-        if (canAppend.get() && shouldAppendPage(
-          rawY.get(), getBottomLimit(size.get().height, scale.get(), pages.get()), event.translationY,
-        )) {
-          const count = pages.get() + 1;
-          pages.set(count);
-          scheduleOnRN(setPageCount, count);
-        }
+        if (!panning.get()) return;
+        dragY.set(event.translationY);
+        panSucceeded.set(success && activeStrokePage.get() === -1);
       })
       .onFinalize(() => {
         if (!panning.get()) return;
         panning.set(false);
-        canAppend.set(false);
-        if (!pinching.get() && activeStrokePage.get() === -1) settle();
+        finishGesture();
       });
 
     const pinch = Gesture.Pinch()
-      .onStart((event) => {
+      .onStart(() => {
         if (activeStrokePage.get() !== -1) return;
         stopAnimation();
         pinching.set(true);
-        canAppend.set(false);
-        const point = toDocumentPoint(
-          { x: event.focalX, y: event.focalY },
-          { x: translateX.get(), y: translateY.get() }, scale.get(),
-        );
-        pinchStart.set({ scale: scale.get(), ...point });
+        pinchStartScale.set(scale.get());
       })
       .onUpdate((event) => {
-        if (!pinching.get() || activeStrokePage.get() !== -1) return;
-        const start = pinchStart.get();
+        if (!pinching.get() || event.numberOfPointers < 2 || activeStrokePage.get() !== -1) return;
+        const previousScale = scale.get();
+        const point = toDocumentPoint(
+          { x: event.focalX, y: event.focalY },
+          { x: translateX.get(), y: translateY.get() }, previousScale,
+        );
         const fit = getFitScale(size.get().width);
-        const nextScale = clamp(start.scale * event.scale, fit * 0.5, fit * 4);
+        const nextScale = clamp(pinchStartScale.get() * event.scale, fit * 0.5, fit * 4);
         scale.set(nextScale);
-        translateX.set(event.focalX - start.x * nextScale);
-        translateY.set(event.focalY - start.y * nextScale);
-        rawY.set(translateY.get());
+        translateX.set(event.focalX - point.x * nextScale);
+        translateY.set(event.focalY - point.y * nextScale);
       })
       .onFinalize(() => {
         if (!pinching.get()) return;
         pinching.set(false);
-        if (activeStrokePage.get() === -1) settle();
+        finishGesture();
       });
 
     return Gesture.Simultaneous(pan, pinch);
-  }, [activeStrokePage, canAppend, pages, panning, pinchStart, pinching, rawY, scale, settle, size, stopAnimation, translateX, translateY]);
+  }, [activeStrokePage, dragY, pages, panning, panSucceeded, pinchStartScale, pinching, scale, settle, size, stopAnimation, translateX, translateY]);
 
   const onLayout = useCallback(({ nativeEvent: { layout } }: LayoutChangeEvent) => {
     if (!layout.width || !layout.height) return;
