@@ -3,12 +3,15 @@ import type { LayoutChangeEvent } from "react-native";
 import { Gesture, PointerType } from "react-native-gesture-handler";
 import {
   cancelAnimation,
+  useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
   withTiming,
   type SharedValue,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
+
+import { useDrawingSession } from "../../../../contexts/drawing-session-context";
 
 import {
   clamp,
@@ -27,6 +30,7 @@ import {
 } from "../../../../geometry/notebook-geometry";
 
 export function useViewportGesture(activeStrokePage: SharedValue<number>) {
+  const { currentPage } = useDrawingSession();
   const [pageCount, setPageCount] = useState(1);
   const pages = useSharedValue(1);
   const size = useSharedValue<ViewportSize>({ width: 0, height: 0 });
@@ -42,6 +46,16 @@ export function useViewportGesture(activeStrokePage: SharedValue<number>) {
   const transform = useDerivedValue(() => [
     { translateX: translateX.get() }, { translateY: translateY.get() }, { scale: scale.get() },
   ]);
+  useAnimatedReaction(
+    () => clamp(
+      Math.floor((size.get().height / 2 - translateY.get()) / scale.get() / PAGE_STRIDE),
+      0,
+      pages.get() - 1,
+    ),
+    (next, previous) => {
+      if (next !== previous) currentPage.set(next);
+    },
+  );
 
   const settle = useCallback(() => {
     "worklet";
@@ -161,12 +175,7 @@ export function useViewportGesture(activeStrokePage: SharedValue<number>) {
     stopAnimation();
     const viewport = size.get();
     if (!viewport.width || activeStrokePage.get() !== -1) return;
-    const currentScale = scale.get();
-    const pageIndex = clamp(
-      Math.floor((viewport.height / 2 - translateY.get()) / currentScale / PAGE_STRIDE),
-      0,
-      pages.get() - 1,
-    );
+    const pageIndex = currentPage.get();
     const nextScale = getFitScale(viewport.width);
     const offset = constrainOffset(
       getCenteredPageOffset(pageIndex, viewport, nextScale),
@@ -177,7 +186,7 @@ export function useViewportGesture(activeStrokePage: SharedValue<number>) {
     scale.set(withTiming(nextScale, { duration: 180 }));
     translateX.set(withTiming(offset.x, { duration: 180 }));
     translateY.set(withTiming(offset.y, { duration: 180 }));
-  }, [activeStrokePage, pages, scale, size, stopAnimation, translateX, translateY]);
+  }, [activeStrokePage, currentPage, pages, scale, size, stopAnimation, translateX, translateY]);
 
   return {
     gesture,
@@ -190,6 +199,8 @@ export function useViewportGesture(activeStrokePage: SharedValue<number>) {
     translateY,
     pages,
     pageCount,
+    currentPage,
+    pinching,
     stopAnimation,
   };
 }

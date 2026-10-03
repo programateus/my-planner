@@ -10,23 +10,23 @@ import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue } from "react-native-reanimated";
-import { useUniwind } from "uniwind";
 
 import { useDrawingSession } from "../../contexts/drawing-session-context";
 import { useDrawingSettings } from "../../contexts/drawing-settings-context";
+import { usePlannerTemplate } from "../../contexts/planner-template-context";
 import { getPageBounds } from "../../geometry/notebook-geometry";
 import { useDrawingActions } from "../../hooks/use-drawing-actions";
 import { ActiveStrokeLayer } from "./active-stroke-layer";
 import { CommittedStrokesLayer } from "./committed-strokes-layer";
+import { PageTemplateLayer } from "./page-template-layer";
 import { ViewportControls } from "./viewport-controls";
 import { usePenGesture } from "./hooks/gestures/use-pen-gesture";
 import { useViewportGesture } from "./hooks/gestures/use-viewport-gesture";
 import { useStrokeSession } from "./hooks/use-stroke-session";
 
 export function DrawingCanvas() {
-  const { theme } = useUniwind();
-  const dark = theme === "dark";
   const { document } = useDrawingSession();
+  const { templates, pictures, dark } = usePlannerTemplate();
   const {
     tool,
     strokeColor,
@@ -88,6 +88,12 @@ export function DrawingCanvas() {
                   />
                 </Group>
               ))}
+              {pictures && Array.from({ length: viewport.pageCount }, (_, index) => {
+                const template = templates[index];
+                return template ? (
+                  <PageTemplateLayer key={index} pageIndex={index} picture={pictures[template]} />
+                ) : null;
+              })}
               <Group layer>
                 <CommittedStrokesLayer
                   strokes={document.getStrokes()}

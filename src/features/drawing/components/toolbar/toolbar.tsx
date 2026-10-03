@@ -12,6 +12,7 @@ import { HighlighterButton } from "./highlighter-button";
 import { HighlighterStrokeWidthSelectorButton } from "./highlighter-stroke-width-selector-button";
 import { PenButton } from "./pen-button";
 import { PenStrokeWidthSelectorButton } from "./pen-stroke-width-selector-button";
+import { PageTemplateSelectorButton } from "./page-template-selector-button";
 import { RedoButton } from "./redo-button";
 import { UndoButton } from "./undo-button";
 
@@ -37,6 +38,8 @@ export const Toolbar = () => {
       <Divider orientation="vertical" />
       <UndoButton />
       <RedoButton />
+      <Divider orientation="vertical" />
+      <PageTemplateSelectorButton />
     </Box>
   );
 };
