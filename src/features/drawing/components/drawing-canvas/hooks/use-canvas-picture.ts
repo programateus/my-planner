@@ -1,18 +1,18 @@
 import { ClipOp, Skia } from "@shopify/react-native-skia";
 import { useDerivedValue, type SharedValue } from "react-native-reanimated";
 
-import type { Stroke } from "../../../domain/entities/stroke";
+import type { RenderedStroke } from "../../../services/render-stroke";
 import { getPageBounds } from "../../../geometry/notebook-geometry";
 
 export function useCanvasPicture(
-  strokes: SharedValue<Stroke[]>,
-  pendingStrokes: SharedValue<Stroke[]>,
+  strokes: SharedValue<RenderedStroke[]>,
+  pendingStrokes: SharedValue<RenderedStroke[]>,
 ) {
   return useDerivedValue(() => {
     const recorder = Skia.PictureRecorder();
     const canvas = recorder.beginRecording();
     const committedIds = new Set<string>();
-    const drawStroke = (stroke: Stroke) => {
+    const drawStroke = (stroke: RenderedStroke) => {
       const bounds = getPageBounds(stroke.pageIndex);
       canvas.save();
       canvas.clipRect(

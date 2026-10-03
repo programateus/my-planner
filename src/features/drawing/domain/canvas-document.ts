@@ -1,11 +1,12 @@
-import { SharedValue } from "react-native-reanimated";
 import { Stroke } from "./entities/stroke";
 import type { PageTemplates, PlannerTemplateId } from "./planner-template";
 
 export interface CanvasDocument {
   addStroke(stroke: Stroke): void;
   removeStroke(stroke: Stroke): void;
-  getStrokes(): SharedValue<Stroke[]>;
+  getStrokes(): readonly Stroke[];
+  getPageCount(): number;
+  setPageCount(count: number): void;
   getPageTemplates(): PageTemplates;
   setPageTemplate(pageIndex: number, template: PlannerTemplateId | null): void;
   subscribePageTemplates(listener: () => void): () => void;

@@ -2,47 +2,87 @@ import { makeMutable, SharedValue } from "react-native-reanimated";
 import { CanvasDocument } from "../domain/canvas-document";
 import { Stroke } from "../domain/entities/stroke";
 import type { PageTemplates, PlannerTemplateId } from "../domain/planner-template";
+import { createEmptyDocument, type DocumentData } from "../domain/document-data";
+import { renderStroke, type RenderedStroke } from "./render-stroke";
 
 export class SkiaCanvasDocument implements CanvasDocument {
-  private readonly strokes: SharedValue<Stroke[]>;
-  private pageTemplates: PageTemplates = {};
+  private readonly renderedStrokes: SharedValue<RenderedStroke[]>;
+  private strokes: Stroke[];
+  private pageTemplates: PageTemplates;
+  private pageCount: number;
+  private readonly listeners = new Set<() => void>();
   private readonly templateListeners = new Set<() => void>();
 
-  constructor() {
-    this.strokes = makeMutable<Stroke[]>([]);
+  constructor(data: DocumentData = createEmptyDocument()) {
+    this.strokes = [...data.strokes];
+    this.pageTemplates = { ...data.pageTemplates };
+    this.pageCount = data.pageCount;
+    this.renderedStrokes = makeMutable(data.strokes.map(renderStroke));
   }
 
   addStroke(stroke: Stroke): void {
-    this.strokes.modify((previous) => {
+    this.strokes = [...this.strokes, stroke];
+    const rendered = renderStroke(stroke);
+    this.renderedStrokes.modify((previous) => {
       "worklet";
-      previous.push(stroke);
+      previous.push(rendered);
 
       return previous;
     });
+    this.notify();
   }
 
   removeStroke(stroke: Stroke): void {
-    this.strokes.modify((previous) => {
+    this.strokes = this.strokes.filter((value) => value.id !== stroke.id);
+    const strokeId = stroke.id;
+    this.renderedStrokes.modify((previous) => {
       "worklet";
-      const index = previous.findIndex((value) => value.id === stroke.id);
+      const index = previous.findIndex((value) => value.id === strokeId);
       if (index !== -1) {
         previous.splice(index, 1);
       }
 
       return previous;
     });
+    this.notify();
   }
 
-  getStrokes(): SharedValue<Stroke[]> {
+  getStrokes(): readonly Stroke[] {
     return this.strokes;
   }
+
+  getRenderedStrokes(): SharedValue<RenderedStroke[]> {
+    return this.renderedStrokes;
+  }
+
+  getPageCount(): number { return this.pageCount; }
+
+  setPageCount(count: number): void {
+    if (!Number.isInteger(count) || count <= this.pageCount) return;
+    this.pageCount = count;
+    this.notify();
+  }
+
+  snapshot(): DocumentData {
+    return {
+      version: 1, pageCount: this.pageCount,
+      strokes: this.strokes, pageTemplates: this.pageTemplates,
+    };
+  }
+
+  subscribe(listener: () => void): () => void {
+    this.listeners.add(listener);
+    return () => { this.listeners.delete(listener); };
+  }
+
+  private notify() { this.listeners.forEach((listener) => listener()); }
 
   getPageTemplates(): PageTemplates {
     return this.pageTemplates;
   }
 
   setPageTemplate(pageIndex: number, template: PlannerTemplateId | null): void {
-    if (!Number.isInteger(pageIndex) || pageIndex < 0) return;
+    if (!Number.isInteger(pageIndex) || pageIndex < 0 || pageIndex >= this.pageCount) return;
     if ((this.pageTemplates[pageIndex] ?? null) === template) return;
 
     const next = { ...this.pageTemplates };
@@ -53,6 +93,7 @@ export class SkiaCanvasDocument implements CanvasDocument {
     }
     this.pageTemplates = next;
     this.templateListeners.forEach((listener) => listener());
+    this.notify();
   }
 
   subscribePageTemplates(listener: () => void): () => void {

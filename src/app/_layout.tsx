@@ -1,6 +1,6 @@
 import "@/global.css";
 
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -20,7 +20,7 @@ export default function RootLayout() {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <KeyboardProvider preload={false}>
           <GluestackUIProvider mode="system">
-            <Slot />
+            <Stack screenOptions={{ headerShown: false }} />
             <AnimatedSplashOverlay />
           </GluestackUIProvider>
         </KeyboardProvider>

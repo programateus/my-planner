@@ -96,7 +96,7 @@ export function DrawingCanvas() {
               })}
               <Group layer>
                 <CommittedStrokesLayer
-                  strokes={document.getStrokes()}
+                  strokes={document.getRenderedStrokes()}
                   pendingStrokes={session.pendingStrokes}
                 />
                 <Group clip={activeClip}>

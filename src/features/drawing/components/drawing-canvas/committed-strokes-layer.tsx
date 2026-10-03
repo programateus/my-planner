@@ -1,12 +1,12 @@
 import { Picture } from "@shopify/react-native-skia";
 import type { SharedValue } from "react-native-reanimated";
 
-import type { Stroke } from "../../domain/entities/stroke";
+import type { RenderedStroke } from "../../services/render-stroke";
 import { useCanvasPicture } from "./hooks/use-canvas-picture";
 
 type CommittedStrokesLayerProps = {
-  strokes: SharedValue<Stroke[]>;
-  pendingStrokes: SharedValue<Stroke[]>;
+  strokes: SharedValue<RenderedStroke[]>;
+  pendingStrokes: SharedValue<RenderedStroke[]>;
 };
 
 export function CommittedStrokesLayer({

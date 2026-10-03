@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-import type { Stroke } from "../../../domain/entities/stroke";
+import type { Stroke, StrokeSample } from "../../../domain/entities/stroke";
 import type { Style } from "../../../domain/entities/style";
 import { HIGHLIGHTER_OPACITY } from "../../../domain/highlighter";
 import {
@@ -14,6 +14,7 @@ import {
   type StrokePoint,
 } from "../../../geometry/stroke-smoothing";
 import { createStrokePaint } from "../../../services/create-stroke-paint";
+import type { RenderedStroke } from "../../../services/render-stroke";
 import { createStrokeId } from "../../../utils/createStrokeId";
 
 type StrokeDraft = {
@@ -21,6 +22,7 @@ type StrokeDraft = {
   builder: SkPathBuilder;
   geometry: StrokeGeometry;
   style: Style;
+  points: StrokeSample[];
 };
 
 type StrokeSessionOptions = {
@@ -31,7 +33,7 @@ type StrokeSessionOptions = {
 export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
   const { color, width, tool } = style;
   const draft = useSharedValue<StrokeDraft | null>(null);
-  const pendingStrokes = useSharedValue<Stroke[]>([]);
+  const pendingStrokes = useSharedValue<RenderedStroke[]>([]);
   const currentColor = useSharedValue(color);
   const currentOpacity = useSharedValue(1);
   const currentBlendMode = useSharedValue<"clear" | "srcOver">("srcOver");
@@ -52,8 +54,8 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
   });
 
   const commitStroke = useCallback(
-    (stroke: Stroke) => {
-      onCommit(stroke);
+    (stroke: RenderedStroke) => {
+      onCommit({ id: stroke.id, pageIndex: stroke.pageIndex, points: stroke.points, style: stroke.style });
 
       const strokeId = stroke.id;
       pendingStrokes.modify((previous) => {
@@ -82,6 +84,7 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
         builder,
         geometry: { lastPoint: sample, cursor: sample },
         style: { color, width, tool },
+        points: [sample],
       });
     },
     [color, width, tool, currentColor, currentOpacity, currentBlendMode, currentPage, draft],
@@ -93,18 +96,18 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
       const current = draft.get();
       if (!current) return;
 
+      const sample = createStrokeSample(
+        current.style.tool === "pen" ? point : { x: point.x, y: point.y },
+        current.style.width,
+        current.geometry.lastPoint.width,
+      );
       const geometry = appendSmoothedPoint(
         current.builder,
         current.geometry,
-        createStrokeSample(
-          current.style.tool === "pen"
-            ? point
-            : { x: point.x, y: point.y },
-          current.style.width,
-          current.geometry.lastPoint.width,
-        ),
+        sample,
       );
       if (geometry !== current.geometry) {
+        current.points.push(sample);
         draft.set({ ...current, geometry });
       }
     },
@@ -117,17 +120,21 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
       const current = draft.get();
       if (!current) return;
 
-      const geometry = appendSmoothedPoint(current.builder, current.geometry, {
+      const sample = {
         x: point.x,
         y: point.y,
         width: current.geometry.lastPoint.width,
-      });
+      };
+      const geometry = appendSmoothedPoint(current.builder, current.geometry, sample);
+      if (geometry !== current.geometry) current.points.push(sample);
       appendStrokeSegment(current.builder, geometry.cursor, geometry.lastPoint);
-      const stroke: Stroke = {
+      const stroke: RenderedStroke = {
         id: createStrokeId(),
         pageIndex: current.pageIndex,
         path: current.builder.detach(),
         paint: createStrokePaint(current.style),
+        points: current.points,
+        style: current.style,
       };
 
       pendingStrokes.modify((previous) => {

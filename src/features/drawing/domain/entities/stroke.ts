@@ -1,8 +1,10 @@
-import { SkPaint, SkPath } from "@shopify/react-native-skia";
+import type { Style } from "./style";
+
+export type StrokeSample = { x: number; y: number; width: number };
 
 export interface Stroke {
   id: string;
   pageIndex: number;
-  path: SkPath;
-  paint: SkPaint;
+  points: StrokeSample[];
+  style: Style;
 }
