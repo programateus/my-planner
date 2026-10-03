@@ -1,0 +1,145 @@
+import {
+  Canvas,
+  Path,
+  Picture,
+  Skia,
+  SkPath,
+  type SkPathBuilder,
+} from "@shopify/react-native-skia";
+import { useCallback, useMemo } from "react";
+import {
+  Gesture,
+  GestureDetector,
+  PointerType,
+} from "react-native-gesture-handler";
+import { useDerivedValue, useSharedValue } from "react-native-reanimated";
+
+import { useCanvas } from "@/contexts/canvas-context";
+
+import { scheduleOnRN } from "react-native-worklets";
+import { AddStrokeCommand } from "../../domain/commands/add-stroke-command";
+import { Style } from "../../domain/entities/style";
+import {
+  appendSmoothedPoint,
+  type StrokePoint,
+} from "../../geometry/stroke-smoothing";
+import { usePaint } from "../../hooks/usePaint";
+import { createStrokeId } from "../../utils/createStrokeId";
+
+type StrokeDraft = {
+  builder: SkPathBuilder;
+  lastPoint: StrokePoint;
+  style: Style;
+};
+
+export function DrawingCanvas() {
+  const { strokeColor, strokeWidth, document, history } = useCanvas();
+  const strokes = document.getStrokes();
+  const draft = useSharedValue<StrokeDraft | null>(null);
+  const currentColor = useSharedValue(strokeColor);
+  const currentWidth = useSharedValue(strokeWidth);
+  const emptyPath = useMemo(() => Skia.PathBuilder.Make().build(), []);
+  const { makePaint } = usePaint();
+
+  const finishedPicture = useDerivedValue(() => {
+    const recorder = Skia.PictureRecorder();
+    const canvas = recorder.beginRecording();
+    for (const stroke of strokes.get()) {
+      canvas.drawPath(stroke.path, stroke.paint);
+    }
+    return recorder.finishRecordingAsPicture();
+  });
+
+  const currentPath = useDerivedValue(() => {
+    const current = draft.get();
+    if (!current) return emptyPath;
+
+    return Skia.PathBuilder.MakeFromPath(current.builder.build())
+      .lineTo(current.lastPoint.x, current.lastPoint.y)
+      .build();
+  });
+
+  const commitStroke = useCallback(
+    (path: SkPath, style: Style) => {
+      const paint = makePaint(style);
+      const command = new AddStrokeCommand(document, {
+        path,
+        paint: paint,
+        id: createStrokeId(),
+      });
+
+      history.execute(command);
+    },
+    [history, document, makePaint],
+  );
+
+  const gesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .minDistance(0)
+        .onBegin((event) => {
+          "worklet";
+          if (event.pointerType !== PointerType.STYLUS) return;
+
+          const builder = Skia.PathBuilder.Make();
+          builder.moveTo(event.x, event.y).lineTo(event.x, event.y);
+
+          draft.set({
+            builder,
+            lastPoint: { x: event.x, y: event.y },
+            style: { width: strokeWidth, color: strokeColor },
+          });
+        })
+        .onUpdate((event) => {
+          "worklet";
+          const current = draft.get();
+          if (event.pointerType !== PointerType.STYLUS || !current) return;
+
+          const lastPoint = appendSmoothedPoint(
+            current.builder,
+            current.lastPoint,
+            { x: event.x, y: event.y },
+          );
+          if (lastPoint !== current.lastPoint) {
+            draft.set({ ...current, lastPoint });
+          }
+        })
+        .onEnd((event, success) => {
+          "worklet";
+          const current = draft.get();
+          if (!success || event.pointerType !== PointerType.STYLUS || !current)
+            return;
+
+          const lastPoint = appendSmoothedPoint(
+            current.builder,
+            current.lastPoint,
+            { x: event.x, y: event.y },
+          );
+          current.builder.lineTo(lastPoint.x, lastPoint.y);
+          const path = current.builder.detach();
+          scheduleOnRN(commitStroke, path, current.style);
+          draft.set(null);
+        })
+        .onFinalize(() => {
+          "worklet";
+          draft.set(null);
+        }),
+    [draft, strokeColor, strokeWidth, commitStroke],
+  );
+
+  return (
+    <GestureDetector gesture={gesture}>
+      <Canvas style={{ flex: 1 }}>
+        <Picture picture={finishedPicture} />
+        <Path
+          path={currentPath}
+          style="stroke"
+          strokeWidth={currentWidth}
+          strokeCap="round"
+          strokeJoin="round"
+          color={currentColor}
+        />
+      </Canvas>
+    </GestureDetector>
+  );
+}
