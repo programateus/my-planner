@@ -11,7 +11,6 @@ export type StrokeGeometry = {
 
 export function getPressureWidth(width: number, pressure?: number): number {
   "worklet";
-  // Missing/invalid pressure keeps the selected nominal width.
   const normalized =
     pressure === undefined || !Number.isFinite(pressure) || pressure < 0
       ? 0.5
@@ -51,10 +50,15 @@ export function appendStrokeSegment(
     const nx = -dy / distance;
     const ny = dx / distance;
     const previousRadius = previous.width / 2;
-    // All contours wind clockwise, so overlapping joins remain filled.
     builder
-      .moveTo(previous.x + nx * previousRadius, previous.y + ny * previousRadius)
-      .lineTo(previous.x - nx * previousRadius, previous.y - ny * previousRadius)
+      .moveTo(
+        previous.x + nx * previousRadius,
+        previous.y + ny * previousRadius,
+      )
+      .lineTo(
+        previous.x - nx * previousRadius,
+        previous.y - ny * previousRadius,
+      )
       .lineTo(next.x - nx * nextRadius, next.y - ny * nextRadius)
       .lineTo(next.x + nx * nextRadius, next.y + ny * nextRadius)
       .close();
@@ -85,7 +89,6 @@ export function appendSmoothedPoint(
   const length =
     Math.hypot(previous.x - start.x, previous.y - start.y) +
     Math.hypot(end.x - previous.x, end.y - previous.y);
-  // Sample the quadratic centerline incrementally; never rebuild past segments.
   const steps = Math.max(1, Math.ceil(length / 2));
   let cursor = start;
 
@@ -93,8 +96,14 @@ export function appendSmoothedPoint(
     const t = step / steps;
     const inverse = 1 - t;
     const sample = {
-      x: inverse * inverse * start.x + 2 * inverse * t * previous.x + t * t * end.x,
-      y: inverse * inverse * start.y + 2 * inverse * t * previous.y + t * t * end.y,
+      x:
+        inverse * inverse * start.x +
+        2 * inverse * t * previous.x +
+        t * t * end.x,
+      y:
+        inverse * inverse * start.y +
+        2 * inverse * t * previous.y +
+        t * t * end.y,
       width:
         inverse * inverse * start.width +
         2 * inverse * t * previous.width +

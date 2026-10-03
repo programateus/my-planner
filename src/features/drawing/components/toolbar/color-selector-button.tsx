@@ -27,7 +27,7 @@ const STROKE_COLORS = [
 const COLOR_ROWS = [STROKE_COLORS.slice(0, 4), STROKE_COLORS.slice(4)];
 
 export const ColorSelectorButton = () => {
-  const { strokeColor, setStrokeColor } = useDrawingSettings();
+  const { strokeColor, setStrokeColor, setTool } = useDrawingSettings();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
   return (
@@ -69,6 +69,7 @@ export const ColorSelectorButton = () => {
                 accessibilityState={{ selected: strokeColor === value }}
                 onPress={() => {
                   setStrokeColor(value);
+                  setTool("pen");
                   setIsColorPickerOpen(false);
                 }}
               >

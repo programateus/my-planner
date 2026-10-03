@@ -27,10 +27,11 @@ type StrokeSessionOptions = {
 };
 
 export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
-  const { color, width } = style;
+  const { color, width, tool } = style;
   const draft = useSharedValue<StrokeDraft | null>(null);
   const pendingStrokes = useSharedValue<Stroke[]>([]);
   const currentColor = useSharedValue(color);
+  const currentBlendMode = useSharedValue<"clear" | "srcOver">("srcOver");
   const emptyPath = useMemo(() => Skia.PathBuilder.Make().build(), []);
 
   const currentPath = useDerivedValue(() => {
@@ -63,16 +64,20 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
     (point: StrokePoint) => {
       "worklet";
       const builder = Skia.PathBuilder.Make();
-      const sample = createStrokeSample(point, width);
+      const sample = createStrokeSample(
+        tool === "eraser" ? { x: point.x, y: point.y } : point,
+        width,
+      );
       builder.addCircle(sample.x, sample.y, sample.width / 2);
       currentColor.set(color);
+      currentBlendMode.set(tool === "eraser" ? "clear" : "srcOver");
       draft.set({
         builder,
         geometry: { lastPoint: sample, cursor: sample },
-        style: { color, width },
+        style: { color, width, tool },
       });
     },
-    [color, width, currentColor, draft],
+    [color, width, tool, currentColor, currentBlendMode, draft],
   );
 
   const updateStroke = useCallback(
@@ -85,7 +90,9 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
         current.builder,
         current.geometry,
         createStrokeSample(
-          point,
+          current.style.tool === "eraser"
+            ? { x: point.x, y: point.y }
+            : point,
           current.style.width,
           current.geometry.lastPoint.width,
         ),
@@ -103,12 +110,11 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
       const current = draft.get();
       if (!current) return;
 
-      // Pen-up often reports zero pressure; retain the last contact width.
-      const geometry = appendSmoothedPoint(
-        current.builder,
-        current.geometry,
-        { x: point.x, y: point.y, width: current.geometry.lastPoint.width },
-      );
+      const geometry = appendSmoothedPoint(current.builder, current.geometry, {
+        x: point.x,
+        y: point.y,
+        width: current.geometry.lastPoint.width,
+      });
       appendStrokeSegment(current.builder, geometry.cursor, geometry.lastPoint);
       const stroke: Stroke = {
         id: createStrokeId(),
@@ -135,6 +141,7 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
   return {
     currentPath,
     currentColor,
+    currentBlendMode,
     pendingStrokes,
     beginStroke,
     updateStroke,
