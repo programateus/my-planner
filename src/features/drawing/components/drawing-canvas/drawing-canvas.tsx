@@ -27,12 +27,24 @@ export function DrawingCanvas() {
   const { theme } = useUniwind();
   const dark = theme === "dark";
   const { document } = useDrawingSession();
-  const { tool, strokeColor, strokeWidth, eraserWidth } = useDrawingSettings();
+  const {
+    tool,
+    strokeColor,
+    strokeWidth,
+    highlighterColor,
+    highlighterWidth,
+    eraserWidth,
+  } = useDrawingSettings();
   const { addStroke } = useDrawingActions();
   const session = useStrokeSession({
     style: {
-      color: strokeColor,
-      width: tool === "eraser" ? eraserWidth : strokeWidth,
+      color: tool === "highlighter" ? highlighterColor : strokeColor,
+      width:
+        tool === "eraser"
+          ? eraserWidth
+          : tool === "highlighter"
+            ? highlighterWidth
+            : strokeWidth,
       tool,
     },
     onCommit: addStroke,
@@ -85,6 +97,7 @@ export function DrawingCanvas() {
                   <ActiveStrokeLayer
                     path={session.currentPath}
                     color={session.currentColor}
+                    opacity={session.currentOpacity}
                     blendMode={session.currentBlendMode}
                   />
                 </Group>

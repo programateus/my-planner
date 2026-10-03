@@ -1,1 +1,1 @@
-export type DrawingTool = "pen" | "eraser";
+export type DrawingTool = "pen" | "highlighter" | "eraser";

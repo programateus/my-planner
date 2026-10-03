@@ -12,6 +12,7 @@ import { Pressable } from "@/components/gluestack/pressable";
 import { Text } from "@/components/gluestack/text";
 
 import { useDrawingSettings } from "../../contexts/drawing-settings-context";
+import { HIGHLIGHTER_COLORS } from "../../domain/highlighter";
 
 const STROKE_COLORS = [
   { label: "Preto", value: "#0A0A0A" },
@@ -24,10 +25,20 @@ const STROKE_COLORS = [
   { label: "Roxo", value: "#8B5CF6" },
 ] as const;
 
-const COLOR_ROWS = [STROKE_COLORS.slice(0, 4), STROKE_COLORS.slice(4)];
-
 export const ColorSelectorButton = () => {
-  const { strokeColor, setStrokeColor, setTool } = useDrawingSettings();
+  const {
+    tool,
+    strokeColor,
+    setStrokeColor,
+    highlighterColor,
+    setHighlighterColor,
+    setTool,
+  } = useDrawingSettings();
+  const isHighlighting = tool === "highlighter";
+  const selectedColor = isHighlighting ? highlighterColor : strokeColor;
+  const colorRows = isHighlighting
+    ? [HIGHLIGHTER_COLORS.slice(0, 3), HIGHLIGHTER_COLORS.slice(3)]
+    : [STROKE_COLORS.slice(0, 4), STROKE_COLORS.slice(4)];
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
   return (
@@ -42,11 +53,13 @@ export const ColorSelectorButton = () => {
           {...triggerProps}
           variant="outline"
           className="min-h-12"
-          accessibilityLabel="Alterar cor do traço"
+          accessibilityLabel={
+            isHighlighting ? "Alterar cor do marca-texto" : "Alterar cor do traço"
+          }
         >
           <Box
             className="h-5 w-5 rounded-full border border-border"
-            style={{ backgroundColor: strokeColor }}
+            style={{ backgroundColor: selectedColor }}
           />
           <ButtonIcon as={Palette} className="h-6 w-6" />
         </Button>
@@ -55,9 +68,9 @@ export const ColorSelectorButton = () => {
       <PopoverBackdrop />
       <PopoverContent
         className="w-auto gap-2 p-3"
-        accessibilityLabel="Cores do traço"
+        accessibilityLabel={isHighlighting ? "Cores do marca-texto" : "Cores do traço"}
       >
-        {COLOR_ROWS.map((row, rowIndex) => (
+        {colorRows.map((row, rowIndex) => (
           <Box key={rowIndex} className="flex-row gap-2">
             {row.map(({ label, value }) => (
               <Pressable
@@ -66,19 +79,23 @@ export const ColorSelectorButton = () => {
                 style={{ backgroundColor: value }}
                 accessibilityRole="button"
                 accessibilityLabel={label}
-                accessibilityState={{ selected: strokeColor === value }}
+                accessibilityState={{ selected: selectedColor === value }}
                 onPress={() => {
-                  setStrokeColor(value);
-                  setTool("pen");
+                  if (isHighlighting) {
+                    setHighlighterColor(value);
+                  } else {
+                    setStrokeColor(value);
+                    setTool("pen");
+                  }
                   setIsColorPickerOpen(false);
                 }}
               >
-                {strokeColor === value && (
+                {selectedColor === value && (
                   <Text
                     className="text-xl font-bold"
                     style={{
                       color:
-                        value === "#FAFAFA" || value === "#EAB308"
+                        isHighlighting || value === "#FAFAFA" || value === "#EAB308"
                           ? "#0A0A0A"
                           : "#FFFFFF",
                     }}

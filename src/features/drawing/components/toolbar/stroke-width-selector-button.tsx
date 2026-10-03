@@ -11,19 +11,28 @@ import {
 } from "@/components/gluestack/popover";
 import { Pressable } from "@/components/gluestack/pressable";
 
-import { useDrawingSettings } from "../../contexts/drawing-settings-context";
-import { ERASER_WIDTHS, STROKE_WIDTHS } from "../../domain/stroke-widths";
+type StrokeWidthSelectorButtonProps = {
+  selectedWidth: number;
+  onWidthChange: (width: number) => void;
+  widths: readonly { label: string; value: number }[];
+  widthLabel: string;
+  previewPath: string;
+  previewColor?: string;
+  previewOpacity?: number;
+};
 
-export function StrokeWidthSelectorButton() {
-  const { tool, strokeWidth, setStrokeWidth, eraserWidth, setEraserWidth } =
-    useDrawingSettings();
-  const isErasing = tool === "eraser";
-  const selectedWidth = isErasing ? eraserWidth : strokeWidth;
-  const setWidth = isErasing ? setEraserWidth : setStrokeWidth;
-  const widths = isErasing ? ERASER_WIDTHS : STROKE_WIDTHS;
-  const widthLabel = isErasing ? "Tamanho da borracha" : "Largura do traço";
+export function StrokeWidthSelectorButton({
+  selectedWidth,
+  onWidthChange,
+  widths,
+  widthLabel,
+  previewPath,
+  previewColor,
+  previewOpacity = 1,
+}: StrokeWidthSelectorButtonProps) {
   const { theme } = useUniwind();
-  const previewColor = theme === "dark" ? "#FAFAFA" : "#0A0A0A";
+  const resolvedPreviewColor =
+    previewColor ?? (theme === "dark" ? "#FAFAFA" : "#0A0A0A");
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -48,7 +57,13 @@ export function StrokeWidthSelectorButton() {
             pointerEvents="none"
             accessible={false}
           >
-            <Circle cx={16} cy={16} r={selectedWidth / 2} fill={previewColor} />
+            <Circle
+              cx={16}
+              cy={16}
+              r={selectedWidth / 2}
+              fill={resolvedPreviewColor}
+              opacity={previewOpacity}
+            />
           </Svg>
           <ButtonIcon as={ChevronDown} className="h-4 w-4" />
         </Button>
@@ -61,7 +76,7 @@ export function StrokeWidthSelectorButton() {
       >
         {widths.map(({ label, value }) => (
           <Pressable
-            key={`${tool}-${value}`}
+            key={value}
             className={`min-h-12 flex-row items-center justify-between gap-4 rounded-lg px-3 ${
               selectedWidth === value ? "bg-accent" : ""
             }`}
@@ -69,7 +84,7 @@ export function StrokeWidthSelectorButton() {
             accessibilityLabel={`${label}, largura ${value}`}
             accessibilityState={{ selected: selectedWidth === value }}
             onPress={() => {
-              setWidth(value);
+              onWidthChange(value);
               setIsOpen(false);
             }}
           >
@@ -81,13 +96,10 @@ export function StrokeWidthSelectorButton() {
               accessible={false}
             >
               <Path
-                d={
-                  isErasing
-                    ? "M 20 20 H 92"
-                    : "M 10 27 C 21 10 30 10 40 23 S 58 31 69 17 S 88 10 102 20"
-                }
+                d={previewPath}
                 fill="none"
-                stroke={previewColor}
+                stroke={resolvedPreviewColor}
+                opacity={previewOpacity}
                 strokeWidth={value}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -100,7 +112,13 @@ export function StrokeWidthSelectorButton() {
               pointerEvents="none"
               accessible={false}
             >
-              <Circle cx={20} cy={20} r={value / 2} fill={previewColor} />
+              <Circle
+                cx={20}
+                cy={20}
+                r={value / 2}
+                fill={resolvedPreviewColor}
+                opacity={previewOpacity}
+              />
             </Svg>
           </Pressable>
         ))}

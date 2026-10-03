@@ -8,6 +8,15 @@ export const STROKE_WIDTHS = [
 
 export const DEFAULT_STROKE_WIDTH = STROKE_WIDTHS[1].value;
 
+export const HIGHLIGHTER_WIDTHS = [
+  { label: "Fino", value: 12 },
+  { label: "Médio", value: 20 },
+  { label: "Grosso", value: 28 },
+  { label: "Muito grosso", value: 36 },
+] as const;
+
+export const DEFAULT_HIGHLIGHTER_WIDTH = HIGHLIGHTER_WIDTHS[1].value;
+
 export const ERASER_WIDTHS = [
   { label: "Pequena", value: 8 },
   { label: "Média", value: 16 },

@@ -5,6 +5,7 @@ import { scheduleOnRN } from "react-native-worklets";
 
 import type { Stroke } from "../../../domain/entities/stroke";
 import type { Style } from "../../../domain/entities/style";
+import { HIGHLIGHTER_OPACITY } from "../../../domain/highlighter";
 import {
   appendSmoothedPoint,
   appendStrokeSegment,
@@ -32,6 +33,7 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
   const draft = useSharedValue<StrokeDraft | null>(null);
   const pendingStrokes = useSharedValue<Stroke[]>([]);
   const currentColor = useSharedValue(color);
+  const currentOpacity = useSharedValue(1);
   const currentBlendMode = useSharedValue<"clear" | "srcOver">("srcOver");
   const currentPage = useSharedValue(-1);
   const emptyPath = useMemo(() => Skia.PathBuilder.Make().build(), []);
@@ -67,11 +69,12 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
       "worklet";
       const builder = Skia.PathBuilder.Make();
       const sample = createStrokeSample(
-        tool === "eraser" ? { x: point.x, y: point.y } : point,
+        tool === "pen" ? point : { x: point.x, y: point.y },
         width,
       );
       builder.addCircle(sample.x, sample.y, sample.width / 2);
       currentColor.set(color);
+      currentOpacity.set(tool === "highlighter" ? HIGHLIGHTER_OPACITY : 1);
       currentBlendMode.set(tool === "eraser" ? "clear" : "srcOver");
       currentPage.set(pageIndex);
       draft.set({
@@ -81,7 +84,7 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
         style: { color, width, tool },
       });
     },
-    [color, width, tool, currentColor, currentBlendMode, currentPage, draft],
+    [color, width, tool, currentColor, currentOpacity, currentBlendMode, currentPage, draft],
   );
 
   const updateStroke = useCallback(
@@ -94,9 +97,9 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
         current.builder,
         current.geometry,
         createStrokeSample(
-          current.style.tool === "eraser"
-            ? { x: point.x, y: point.y }
-            : point,
+          current.style.tool === "pen"
+            ? point
+            : { x: point.x, y: point.y },
           current.style.width,
           current.geometry.lastPoint.width,
         ),
@@ -148,6 +151,7 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
   return {
     currentPath,
     currentColor,
+    currentOpacity,
     currentBlendMode,
     currentPage,
     pendingStrokes,

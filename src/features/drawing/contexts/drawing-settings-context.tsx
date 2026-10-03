@@ -8,8 +8,10 @@ import {
 import { useUniwind } from "uniwind";
 
 import type { DrawingTool } from "../domain/drawing-tool";
+import { DEFAULT_HIGHLIGHTER_COLOR } from "../domain/highlighter";
 import {
   DEFAULT_ERASER_WIDTH,
+  DEFAULT_HIGHLIGHTER_WIDTH,
   DEFAULT_STROKE_WIDTH,
 } from "../domain/stroke-widths";
 
@@ -20,6 +22,10 @@ type DrawingSettingsContextValue = {
   setStrokeColor: (color: string) => void;
   strokeWidth: number;
   setStrokeWidth: (width: number) => void;
+  highlighterColor: string;
+  setHighlighterColor: (color: string) => void;
+  highlighterWidth: number;
+  setHighlighterWidth: (width: number) => void;
   eraserWidth: number;
   setEraserWidth: (width: number) => void;
 };
@@ -32,6 +38,12 @@ export function DrawingSettingsProvider({ children }: { children: ReactNode }) {
   const [tool, setTool] = useState<DrawingTool>("pen");
   const [selectedColor, setStrokeColor] = useState<string | null>(null);
   const [strokeWidth, setStrokeWidth] = useState<number>(DEFAULT_STROKE_WIDTH);
+  const [highlighterColor, setHighlighterColor] = useState<string>(
+    DEFAULT_HIGHLIGHTER_COLOR,
+  );
+  const [highlighterWidth, setHighlighterWidth] = useState<number>(
+    DEFAULT_HIGHLIGHTER_WIDTH,
+  );
   const [eraserWidth, setEraserWidth] = useState<number>(DEFAULT_ERASER_WIDTH);
   const strokeColor =
     selectedColor ?? (theme === "dark" ? "#FAFAFA" : "#0A0A0A");
@@ -44,10 +56,14 @@ export function DrawingSettingsProvider({ children }: { children: ReactNode }) {
       setStrokeColor,
       strokeWidth,
       setStrokeWidth,
+      highlighterColor,
+      setHighlighterColor,
+      highlighterWidth,
+      setHighlighterWidth,
       eraserWidth,
       setEraserWidth,
     }),
-    [tool, strokeColor, strokeWidth, eraserWidth],
+    [tool, strokeColor, strokeWidth, highlighterColor, highlighterWidth, eraserWidth],
   );
 
   return (
