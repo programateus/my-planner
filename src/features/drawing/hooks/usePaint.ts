@@ -8,6 +8,7 @@ import { Style } from "../domain/entities/style";
 
 export const usePaint = () => {
   const makePaint = (style: Style) => {
+    "worklet";
     const paint = Skia.Paint();
     paint.setAntiAlias(true);
     paint.setStyle(PaintStyle.Stroke);

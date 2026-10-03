@@ -3,7 +3,6 @@ import {
   Path,
   Picture,
   Skia,
-  SkPath,
   type SkPathBuilder,
 } from "@shopify/react-native-skia";
 import { useCallback, useMemo } from "react";
@@ -18,6 +17,7 @@ import { useCanvas } from "@/contexts/canvas-context";
 
 import { scheduleOnRN } from "react-native-worklets";
 import { AddStrokeCommand } from "../../domain/commands/add-stroke-command";
+import { Stroke } from "../../domain/entities/stroke";
 import { Style } from "../../domain/entities/style";
 import {
   appendSmoothedPoint,
@@ -36,6 +36,7 @@ export function DrawingCanvas() {
   const { strokeColor, strokeWidth, document, history } = useCanvas();
   const strokes = document.getStrokes();
   const draft = useSharedValue<StrokeDraft | null>(null);
+  const pendingStrokes = useSharedValue<Stroke[]>([]);
   const currentColor = useSharedValue(strokeColor);
   const currentWidth = useSharedValue(strokeWidth);
   const emptyPath = useMemo(() => Skia.PathBuilder.Make().build(), []);
@@ -44,8 +45,15 @@ export function DrawingCanvas() {
   const finishedPicture = useDerivedValue(() => {
     const recorder = Skia.PictureRecorder();
     const canvas = recorder.beginRecording();
+    const committedIds = new Set<string>();
     for (const stroke of strokes.get()) {
       canvas.drawPath(stroke.path, stroke.paint);
+      committedIds.add(stroke.id);
+    }
+    for (const stroke of pendingStrokes.get()) {
+      if (!committedIds.has(stroke.id)) {
+        canvas.drawPath(stroke.path, stroke.paint);
+      }
     }
     return recorder.finishRecordingAsPicture();
   });
@@ -60,17 +68,17 @@ export function DrawingCanvas() {
   });
 
   const commitStroke = useCallback(
-    (path: SkPath, style: Style) => {
-      const paint = makePaint(style);
-      const command = new AddStrokeCommand(document, {
-        path,
-        paint: paint,
-        id: createStrokeId(),
-      });
-
+    (stroke: Stroke) => {
+      const command = new AddStrokeCommand(document, stroke);
       history.execute(command);
+
+      const strokeId = stroke.id;
+      pendingStrokes.modify((previous) => {
+        "worklet";
+        return previous.filter((value) => value.id !== strokeId);
+      });
     },
-    [history, document, makePaint],
+    [history, document, pendingStrokes],
   );
 
   const gesture = useMemo(
@@ -83,6 +91,8 @@ export function DrawingCanvas() {
 
           const builder = Skia.PathBuilder.Make();
           builder.moveTo(event.x, event.y).lineTo(event.x, event.y);
+          currentColor.set(strokeColor);
+          currentWidth.set(strokeWidth);
 
           draft.set({
             builder,
@@ -116,15 +126,33 @@ export function DrawingCanvas() {
             { x: event.x, y: event.y },
           );
           current.builder.lineTo(lastPoint.x, lastPoint.y);
-          const path = current.builder.detach();
-          scheduleOnRN(commitStroke, path, current.style);
+          const stroke: Stroke = {
+            id: createStrokeId(),
+            path: current.builder.detach(),
+            paint: makePaint(current.style),
+          };
+          pendingStrokes.modify((previous) => {
+            "worklet";
+            previous.push(stroke);
+            return previous;
+          });
           draft.set(null);
+          scheduleOnRN(commitStroke, stroke);
         })
         .onFinalize(() => {
           "worklet";
           draft.set(null);
         }),
-    [draft, strokeColor, strokeWidth, commitStroke],
+    [
+      currentColor,
+      strokeColor,
+      currentWidth,
+      strokeWidth,
+      draft,
+      pendingStrokes,
+      makePaint,
+      commitStroke,
+    ],
   );
 
   return (
