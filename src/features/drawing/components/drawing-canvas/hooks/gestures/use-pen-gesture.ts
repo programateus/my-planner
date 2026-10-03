@@ -21,13 +21,21 @@ export function usePenGesture({
         .onBegin((event) => {
           "worklet";
           if (event.pointerType === PointerType.STYLUS) {
-            beginStroke({ x: event.x, y: event.y });
+            beginStroke({
+              x: event.x,
+              y: event.y,
+              pressure: event.stylusData?.pressure,
+            });
           }
         })
         .onUpdate((event) => {
           "worklet";
           if (event.pointerType === PointerType.STYLUS) {
-            updateStroke({ x: event.x, y: event.y });
+            updateStroke({
+              x: event.x,
+              y: event.y,
+              pressure: event.stylusData?.pressure,
+            });
           }
         })
         .onEnd((event, success) => {

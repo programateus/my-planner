@@ -7,6 +7,8 @@ import {
 } from "react";
 import { useUniwind } from "uniwind";
 
+import { DEFAULT_STROKE_WIDTH } from "../domain/stroke-widths";
+
 type DrawingSettingsContextValue = {
   strokeColor: string;
   setStrokeColor: (color: string) => void;
@@ -20,7 +22,7 @@ const DrawingSettingsContext =
 export function DrawingSettingsProvider({ children }: { children: ReactNode }) {
   const { theme } = useUniwind();
   const [selectedColor, setStrokeColor] = useState<string | null>(null);
-  const [strokeWidth, setStrokeWidth] = useState(4);
+  const [strokeWidth, setStrokeWidth] = useState<number>(DEFAULT_STROKE_WIDTH);
   const strokeColor =
     selectedColor ?? (theme === "dark" ? "#FAFAFA" : "#0A0A0A");
 

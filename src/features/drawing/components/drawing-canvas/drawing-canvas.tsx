@@ -29,7 +29,6 @@ export function DrawingCanvas() {
         <ActiveStrokeLayer
           path={session.currentPath}
           color={session.currentColor}
-          width={session.currentWidth}
         />
       </Canvas>
     </GestureDetector>

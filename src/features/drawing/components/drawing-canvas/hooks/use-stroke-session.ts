@@ -7,6 +7,9 @@ import type { Stroke } from "../../../domain/entities/stroke";
 import type { Style } from "../../../domain/entities/style";
 import {
   appendSmoothedPoint,
+  appendStrokeSegment,
+  createStrokeSample,
+  type StrokeGeometry,
   type StrokePoint,
 } from "../../../geometry/stroke-smoothing";
 import { createStrokePaint } from "../../../services/create-stroke-paint";
@@ -14,7 +17,7 @@ import { createStrokeId } from "../../../utils/createStrokeId";
 
 type StrokeDraft = {
   builder: SkPathBuilder;
-  lastPoint: StrokePoint;
+  geometry: StrokeGeometry;
   style: Style;
 };
 
@@ -28,16 +31,19 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
   const draft = useSharedValue<StrokeDraft | null>(null);
   const pendingStrokes = useSharedValue<Stroke[]>([]);
   const currentColor = useSharedValue(color);
-  const currentWidth = useSharedValue(width);
   const emptyPath = useMemo(() => Skia.PathBuilder.Make().build(), []);
 
   const currentPath = useDerivedValue(() => {
     const current = draft.get();
     if (!current) return emptyPath;
 
-    return Skia.PathBuilder.MakeFromPath(current.builder.build())
-      .lineTo(current.lastPoint.x, current.lastPoint.y)
-      .build();
+    const preview = Skia.PathBuilder.MakeFromPath(current.builder.build());
+    appendStrokeSegment(
+      preview,
+      current.geometry.cursor,
+      current.geometry.lastPoint,
+    );
+    return preview.detach();
   });
 
   const commitStroke = useCallback(
@@ -57,12 +63,16 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
     (point: StrokePoint) => {
       "worklet";
       const builder = Skia.PathBuilder.Make();
-      builder.moveTo(point.x, point.y).lineTo(point.x, point.y);
+      const sample = createStrokeSample(point, width);
+      builder.addCircle(sample.x, sample.y, sample.width / 2);
       currentColor.set(color);
-      currentWidth.set(width);
-      draft.set({ builder, lastPoint: point, style: { color, width } });
+      draft.set({
+        builder,
+        geometry: { lastPoint: sample, cursor: sample },
+        style: { color, width },
+      });
     },
-    [color, width, currentColor, currentWidth, draft],
+    [color, width, currentColor, draft],
   );
 
   const updateStroke = useCallback(
@@ -71,13 +81,17 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
       const current = draft.get();
       if (!current) return;
 
-      const lastPoint = appendSmoothedPoint(
+      const geometry = appendSmoothedPoint(
         current.builder,
-        current.lastPoint,
-        point,
+        current.geometry,
+        createStrokeSample(
+          point,
+          current.style.width,
+          current.geometry.lastPoint.width,
+        ),
       );
-      if (lastPoint !== current.lastPoint) {
-        draft.set({ ...current, lastPoint });
+      if (geometry !== current.geometry) {
+        draft.set({ ...current, geometry });
       }
     },
     [draft],
@@ -89,12 +103,13 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
       const current = draft.get();
       if (!current) return;
 
-      const lastPoint = appendSmoothedPoint(
+      // Pen-up often reports zero pressure; retain the last contact width.
+      const geometry = appendSmoothedPoint(
         current.builder,
-        current.lastPoint,
-        point,
+        current.geometry,
+        { x: point.x, y: point.y, width: current.geometry.lastPoint.width },
       );
-      current.builder.lineTo(lastPoint.x, lastPoint.y);
+      appendStrokeSegment(current.builder, geometry.cursor, geometry.lastPoint);
       const stroke: Stroke = {
         id: createStrokeId(),
         path: current.builder.detach(),
@@ -120,7 +135,6 @@ export function useStrokeSession({ style, onCommit }: StrokeSessionOptions) {
   return {
     currentPath,
     currentColor,
-    currentWidth,
     pendingStrokes,
     beginStroke,
     updateStroke,
