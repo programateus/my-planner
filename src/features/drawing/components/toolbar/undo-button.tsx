@@ -1,24 +1,21 @@
 import { Undo } from "lucide-react-native";
-import { useSyncExternalStore } from "react";
 
 import { Button } from "@/components/gluestack/button";
-import { useCanvas } from "@/contexts/canvas-context";
+import { useDrawingActions } from "../../hooks/use-drawing-actions";
+import { useDrawingHistory } from "../../hooks/use-drawing-history";
 
 export const UndoButton = () => {
-  const { history } = useCanvas();
-  useSyncExternalStore(
-    (cb) => history.subscribe(cb),
-    () => history.snapshot(),
-  );
+  const { undo } = useDrawingActions();
+  const { canUndo } = useDrawingHistory();
 
   return (
     <Button
       variant="outline"
       className="min-h-12"
       accessibilityLabel="Desfazer"
-      disabled={!history.canUndo}
-      isDisabled={!history.canUndo}
-      onPressOut={() => history.undo()}
+      disabled={!canUndo}
+      isDisabled={!canUndo}
+      onPressOut={undo}
     >
       <Undo />
     </Button>

@@ -11,7 +11,7 @@ import {
 import { Pressable } from "@/components/gluestack/pressable";
 import { Text } from "@/components/gluestack/text";
 
-import { useCanvas } from "@/contexts/canvas-context";
+import { useDrawingSettings } from "../../contexts/drawing-settings-context";
 
 const STROKE_COLORS = [
   { label: "Preto", value: "#0A0A0A" },
@@ -27,7 +27,7 @@ const STROKE_COLORS = [
 const COLOR_ROWS = [STROKE_COLORS.slice(0, 4), STROKE_COLORS.slice(4)];
 
 export const ColorSelectorButton = () => {
-  const { strokeColor, setStrokeColor } = useCanvas();
+  const { strokeColor, setStrokeColor } = useDrawingSettings();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
   return (

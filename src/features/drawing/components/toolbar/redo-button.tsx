@@ -1,24 +1,21 @@
 import { Redo } from "lucide-react-native";
-import { useSyncExternalStore } from "react";
 
 import { Button } from "@/components/gluestack/button";
-import { useCanvas } from "@/contexts/canvas-context";
+import { useDrawingActions } from "../../hooks/use-drawing-actions";
+import { useDrawingHistory } from "../../hooks/use-drawing-history";
 
 export const RedoButton = () => {
-  const { history } = useCanvas();
-  useSyncExternalStore(
-    (cb) => history.subscribe(cb),
-    () => history.snapshot(),
-  );
+  const { redo } = useDrawingActions();
+  const { canRedo } = useDrawingHistory();
 
   return (
     <Button
       variant="outline"
       className="min-h-12"
       accessibilityLabel="Refazer"
-      disabled={!history.canRedo}
-      isDisabled={!history.canRedo}
-      onPressOut={() => history.redo()}
+      disabled={!canRedo}
+      isDisabled={!canRedo}
+      onPressOut={redo}
     >
       <Redo />
     </Button>
