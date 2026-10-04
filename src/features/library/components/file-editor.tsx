@@ -1,5 +1,5 @@
-import { router, useNavigation } from "expo-router";
-import { usePreventRemove } from "expo-router/react-navigation";
+import { useNavigation } from "expo-router";
+import { usePreventRemove } from "expo-router/build/react-navigation";
 import { ArrowLeft, Save } from "lucide-react-native";
 import {
   useCallback,
@@ -8,100 +8,25 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { ActivityIndicator, AppState } from "react-native";
+import { AppState } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
+import goBack from "@/app/utils/go-back";
 import { Box } from "@/components/gluestack/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/gluestack/button";
-import { SafeAreaView } from "@/components/gluestack/safe-area-view";
 import { Text } from "@/components/gluestack/text";
 import { Toast, ToastTitle, useToast } from "@/components/gluestack/toast";
 import { DrawingCanvas } from "@/features/drawing/components/drawing-canvas";
 import { Toolbar } from "@/features/drawing/components/toolbar";
 import { DrawingProvider } from "@/features/drawing/contexts/drawing-provider";
-import type { DocumentData } from "@/features/drawing/domain/document-data";
+import { DocumentData } from "@/features/drawing/domain/document-data";
 import { SkiaCanvasDocument } from "@/features/drawing/services/skia-canvas-document";
-import type { LibraryEntry } from "@/features/library/domain/library-repository";
 import { DocumentSaver } from "@/features/library/services/document-saver";
-import { libraryRepository } from "@/features/library/services/library-repository";
 
-function goBack() {
-  if (router.canGoBack()) router.back();
-  else router.replace("/");
-}
+import { LibraryEntry } from "../domain/library-repository";
+import { libraryRepository } from "../services/library-repository";
 
-async function readFile(id: string) {
-  const [entry, data] = await Promise.all([
-    libraryRepository.getEntry(id),
-    libraryRepository.loadDocument(id),
-  ]);
-  if (entry?.kind !== "file") throw new Error("Arquivo não encontrado.");
-  return { entry, data };
-}
-
-export function FileScreen({ id }: { id: string }) {
-  const [loaded, setLoaded] = useState<{
-    entry: LibraryEntry;
-    data: DocumentData;
-  } | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    let active = true;
-    void readFile(id).then(
-      (value) => {
-        if (active) setLoaded(value);
-      },
-      (cause) => {
-        if (active)
-          setError(
-            cause instanceof Error
-              ? cause.message
-              : "Não foi possível abrir o arquivo.",
-          );
-      },
-    );
-    return () => {
-      active = false;
-    };
-  }, [id, attempt]);
-
-  if (loaded) return <FileEditor entry={loaded.entry} data={loaded.data} />;
-  return (
-    <Box className="flex-1 bg-background">
-      <SafeAreaView style={{ flex: 1 }}>
-        <Button
-          variant="ghost"
-          className="self-start m-3 min-h-12"
-          onPress={goBack}
-        >
-          <ButtonIcon as={ArrowLeft} />
-          <ButtonText>Meus arquivos</ButtonText>
-        </Button>
-        {error ? (
-          <Box className="p-6 items-center gap-4">
-            <Text className="text-destructive text-center">{error}</Text>
-            <Button
-              variant="outline"
-              onPress={() => {
-                setError(null);
-                setAttempt((value) => value + 1);
-              }}
-            >
-              <ButtonText>Tentar novamente</ButtonText>
-            </Button>
-          </Box>
-        ) : (
-          <ActivityIndicator
-            style={{ marginTop: 48 }}
-            accessibilityLabel="Abrindo desenho"
-          />
-        )}
-      </SafeAreaView>
-    </Box>
-  );
-}
-
-function FileEditor({
+export function FileEditor({
   entry,
   data,
 }: {
